@@ -54,6 +54,11 @@ chmod +x rtcqs-python
 ./rtcqs-python
 ```
 
+## Future plans
+
+- Make the project more modular so it gets easier to add new features
+- Add a Qt GUI
+
 ## Contact
 
 To contact me send me a mail or if it's a technical issue or question, use this project's issue tracker.
