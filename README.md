@@ -26,6 +26,34 @@ Basically the same as the realtimeconfigquickscan:
 - rtprio check
 - Swappiness check
 
+## Usage
+
+When writing this script I tried to use as much as Python's built-in functionality as possible so no extra modules are needed, just Python 3. To run the script first clone this repository.
+
+```
+git clone https://github.com/autostatic/rtcqs-python.git
+```
+
+Then cd into the newly created directory.
+
+```
+cd rtcqs-python
+```
+
+And run the script.
+
+```
+python3 ./rtcqs-python
+```
+
+Or add the executable bit and run the script directly.
+
+```
+cd rtcqs-python
+chmod +x rtcqs-python
+./rtcqs-python
+```
+
 ## Contact
 
 To contact me send me a mail or if it's a technical issue or question, use this project's issue tracker.
