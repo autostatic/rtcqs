@@ -28,7 +28,7 @@ Basically the same as the realtimeconfigquickscan:
 
 ## Usage
 
-When writing this script I tried to use as much as Python's built-in functionality as possible so no extra modules are needed, just Python 3. To run the script first clone this repository.
+When writing this script I could rely on Python's built-in functionality so no extra modules are needed, just Python 3. To run the script first clone this repository.
 
 ```
 git clone https://github.com/autostatic/rtcqs-python.git
