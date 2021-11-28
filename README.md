@@ -10,8 +10,8 @@ Why a port to Python?
 - A Python version might be easier to maintain as Python seems to be more popular than Perl (i.e. there are 50 times more Python based repositories on Github than their Perl counterparts)
 - I'm personally more proficient with Python than with Perl, this makes it it easier and faster for me to add or improve features
 - A Python port allowed me to slap a more permissive license on the code
-- Possibility to update or remove outdated features and add new features
 - Python probably has better GUI bindings which might make it easier to add a nice GUI
+- Seized the opportunity to remove obsolete features
 
 ## Features
 
