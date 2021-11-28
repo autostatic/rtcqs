@@ -323,6 +323,31 @@ def swappiness_check():
     print()
 
 
+def max_user_watches_check():
+    wiki_anchor = "#sysctlconf"
+
+    print("Maximum User Watches")
+    print("====================")
+
+    with open('/proc/sys/fs/inotify/max_user_watches', 'r') as f:
+        max_user_watches = int(f.readline().strip())
+
+    if max_user_watches < 524288:
+        status['max_user_watches'] = "WARNING"
+        print_status('max_user_watches')
+        print(f"The max_user_watches setting is set to {max_user_watches} "
+              "which might be too low when working with a high number of "
+              "files that change a lot. Try increasing the setting to at "
+              f"least 524288 or higher. See also {wiki_url}{wiki_anchor}")
+    else:
+        status['max_user_watches'] = "OK"
+        print_status('max_user_watches')
+        print(f"max_user_watches has been set to {max_user_watches} which is "
+              "sufficient")
+
+    print()
+
+
 def main():
     version()
     root_check()
@@ -336,6 +361,7 @@ def main():
     preempt_rt_check(kernel_config)
     rt_prio_check()
     swappiness_check()
+    max_user_watches_check()
 
 
 if __name__ == "__main__":
