@@ -18,13 +18,17 @@ Why a port to Python?
 Basically the same as the realtimeconfigquickscan:
 - Root check
 - Audio group check
-- Background process scan
+- Background process check
 - CPU frequency check
 - High resolution timers check
 - 1000 Hz/No Hz check
 - Preempt RT check
 - rtprio check
 - Swappiness check
+- max_user_watches check
+
+Added features:
+- Spectre/Meltdown mitigations check
 
 ## Usage
 

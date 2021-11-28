@@ -261,6 +261,31 @@ def preempt_rt_check(kernel_config):
     print()
 
 
+def mitigations_check():
+    wiki_anchor = "#disabling_spectre_and_meltdown_mitigations"
+
+    print("Spectre/Meltdown mitigations")
+    print("============================")
+
+    with open('/proc/cmdline', 'r') as f:
+        cmd_line = f.readline().strip().split()
+
+    if 'mitigations=off' not in cmd_line:
+        status['mitigations'] = "WARNING"
+        print_status('mitigations')
+        print("Kernel with Spectre/Meltdown mitigations found. This could "
+              "have a negative impact on the performance of your system. See "
+              f"also: {wiki_url}{wiki_anchor}")
+    else:
+        status['mitigations'] = "OK"
+        print_status('mitigations')
+        print("Spectre/Meltdown mitigations are disabled. Be warned that "
+              "this makes your system more vulnerable for Spectre/Meltdown "
+              "attacks.")
+
+    print()
+
+
 def rt_prio_check():
     wiki_anchor = '#limitsconfaudioconf'
     param = os.sched_param(80)
@@ -359,6 +384,7 @@ def main():
     system_timer_check(kernel_config)
     tickless_check(kernel_config)
     preempt_rt_check(kernel_config)
+    mitigations_check()
     rt_prio_check()
     swappiness_check()
     max_user_watches_check()
