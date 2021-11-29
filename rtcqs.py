@@ -250,7 +250,7 @@ def preempt_rt_check(kernel_config):
             'CONFIG_PREEMPT_RT_FULL=y' in kernel_config:
         preempt = True
 
-    if not threadirqs or not preempt:
+    if not threadirqs and not preempt:
         status['preempt_rt'] = "WARNING"
         print_status('preempt_rt')
         print("Kernel without 'threadirqs' parameter or real-time "
