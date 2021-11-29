@@ -75,8 +75,8 @@ def background_check():
         dir for dir in glob.glob(os.path.join('/proc/', '[0-9]*'))]
     procs_bad_list = []
 
-    print("Backround Processes")
-    print("===================")
+    print("Background Processes")
+    print("====================")
 
     for dir in procs_list_dirs:
         cmdline = f'{dir}/cmdline'
@@ -322,7 +322,7 @@ def swappiness_check():
     if len(lines) < 2:
         swap = False
         status['swappiness'] = "OK"
-        print_status('rt_prio')
+        print_status('swappiness')
         print("Your system is configured without swap, setting swappiness "
               "does not apply.")
     else:
@@ -373,6 +373,44 @@ def max_user_watches_check():
     print()
 
 
+def filesystems():
+    wiki_anchor = "#filesystems"
+    good_fs = ['ext4', 'xfs', 'zfs', 'btrfs']
+    bad_fs = ['fuse', 'reiserfs', 'nfs']
+    bad_mounts = ['/boot']
+    good_mounts_list = []
+    bad_mounts_list = []
+
+    print("Filesystems")
+    print("===========")
+
+    with open('/proc/mounts', 'r') as f:
+        mounts = [l.split() for l in f.readlines()]
+
+    for mount in mounts:
+        mount_split = mount[2].split('.')[0]
+        if mount_split in good_fs and mount[1] not in bad_mounts:
+            good_mounts_list.append(mount[1])
+        elif mount_split in bad_fs or mount[1] in bad_mounts:
+            bad_mounts_list.append(mount[1])
+
+    if len(good_mounts_list) > 0:
+        good_mounts = ', '.join(good_mounts_list)
+        status['filesystems'] = "OK"
+        print_status('filesystems')
+        print("The following mounts can be used for audio purposes: "
+              f"{good_mounts}")
+
+    if len(bad_mounts_list) > 0:
+        bad_mounts = ', '.join(bad_mounts_list)
+        status['filesystems'] = "WARNING"
+        print_status('filesystems')
+        print("The following mounts should be avoided for audio purposes: "
+              f"{bad_mounts}. See also {wiki_url}{wiki_anchor}")
+
+    print()
+
+
 def main():
     version()
     root_check()
@@ -388,6 +426,7 @@ def main():
     rt_prio_check()
     swappiness_check()
     max_user_watches_check()
+    filesystems()
 
 
 if __name__ == "__main__":

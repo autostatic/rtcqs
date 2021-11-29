@@ -26,6 +26,7 @@ Basically the same as the realtimeconfigquickscan:
 - rtprio check
 - Swappiness check
 - max_user_watches check
+- Filesystem check
 
 Added features:
 - Spectre/Meltdown mitigations check
