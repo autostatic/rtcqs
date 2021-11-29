@@ -21,7 +21,7 @@ Basically the same as the realtimeconfigquickscan:
 - Background process check
 - CPU frequency check
 - High resolution timers check
-- 1000 Hz/No Hz check
+- System timer check
 - Preempt RT check
 - rtprio check
 - Swappiness check
