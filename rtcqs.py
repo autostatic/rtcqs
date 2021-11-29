@@ -202,6 +202,12 @@ def system_timer_check(kernel_config):
         print_status('system_timer')
         print("System timer is not 1000 Hz but high resolution timers are "
               "enabled.")
+    elif 'CONFIG_HZ=1000' in kernel_config and \
+            'CONFIG_HIGH_RES_TIMERS=y' in kernel_config:
+        status['system_timer'] = "OK"
+        print_status('system_timer')
+        print("System timer is set at 1000 Hz and high resolution timers are "
+              "enabled.")
 
     print()
 
@@ -373,7 +379,7 @@ def max_user_watches_check():
     print()
 
 
-def filesystems():
+def filesystems_check():
     wiki_anchor = "#filesystems"
     good_fs = ['ext4', 'xfs', 'zfs', 'btrfs']
     bad_fs = ['fuse', 'reiserfs', 'nfs']
@@ -426,7 +432,7 @@ def main():
     rt_prio_check()
     swappiness_check()
     max_user_watches_check()
-    filesystems()
+    filesystems_check()
 
 
 if __name__ == "__main__":
