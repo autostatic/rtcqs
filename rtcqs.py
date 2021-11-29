@@ -10,6 +10,7 @@ import gzip
 user = getpass.getuser()
 wiki_url = "https://wiki.linuxaudio.org/wiki/system_configuration"
 status = {}
+kernel = {}
 
 
 def version():
@@ -59,7 +60,7 @@ def audio_group_check():
     else:
         status['audio_group'] = "OK"
         print_status('audio_group')
-        print(f"User {user} is in the audio group")
+        print(f"User {user} is in the audio group.")
 
     print()
 
@@ -143,14 +144,17 @@ def governor_check():
 
 
 def kernel_config_check():
-    kernel_release = os.uname().release
+    kernel['release'] = os.uname().release
+
+    with open('/proc/cmdline', 'r') as f:
+        kernel['cmdline'] = f.readline().strip().split()
 
     if os.path.exists('/proc/config.gz'):
         with gzip.open('/proc/config.gz', 'r') as f:
-            kernel_config = [l.strip() for l in f.readlines()]
-    elif os.path.exists(f'/boot/config-{kernel_release}'):
-        with open(f'/boot/config-{kernel_release}', 'r') as f:
-            kernel_config = [l.strip() for l in f.readlines()]
+            kernel['config'] = [l.strip() for l in f.readlines()]
+    elif os.path.exists(f'/boot/config-{kernel["release"]}'):
+        with open(f'/boot/config-{kernel["release"]}', 'r') as f:
+            kernel['config'] = [l.strip() for l in f.readlines()]
     else:
         print("Kernel Configuration")
         print("====================")
@@ -159,16 +163,14 @@ def kernel_config_check():
         print("Could not find kernel configuration.")
         print()
 
-    return kernel_config
 
-
-def high_res_timers_check(kernel_config):
+def high_res_timers_check():
     wiki_anchor = '#installing_a_real-time_kernel'
 
     print("High Resolution Timers")
     print("======================")
 
-    if 'CONFIG_HIGH_RES_TIMERS=y' not in kernel_config:
+    if 'CONFIG_HIGH_RES_TIMERS=y' not in kernel['config']:
         status['high_res_timers'] = "WARNING"
         print_status('high_res_timers')
         print("High resolution timers are not enabled. Try enabling "
@@ -183,27 +185,27 @@ def high_res_timers_check(kernel_config):
     print()
 
 
-def system_timer_check(kernel_config):
+def system_timer_check():
     wiki_anchor = '#installing_a_real-time_kernel'
 
     print("System Timer")
     print("============")
 
-    if 'CONFIG_HZ=1000' not in kernel_config and \
-            'CONFIG_HIGH_RES_TIMERS=y' not in kernel_config:
+    if 'CONFIG_HZ=1000' not in kernel['config'] and \
+            'CONFIG_HIGH_RES_TIMERS=y' not in kernel['config']:
         status['system_timer'] = "WARNING"
         print_status('system_timer')
         print("CONFIG_HZ is not set at 1000 Hz. Try setting CONFIG_HZ to 1000 "
               "and/or enabling CONFIG_HIGH_RES_TIMERS. See also: "
               f"{wiki_url}{wiki_anchor}")
-    elif 'CONFIG_HZ=1000' not in kernel_config and \
-            'CONFIG_HIGH_RES_TIMERS=y' in kernel_config:
+    elif 'CONFIG_HZ=1000' not in kernel['config'] and \
+            'CONFIG_HIGH_RES_TIMERS=y' in kernel['config']:
         status['system_timer'] = "OK"
         print_status('system_timer')
         print("System timer is not 1000 Hz but high resolution timers are "
               "enabled.")
-    elif 'CONFIG_HZ=1000' in kernel_config and \
-            'CONFIG_HIGH_RES_TIMERS=y' in kernel_config:
+    elif 'CONFIG_HZ=1000' in kernel['config'] and \
+            'CONFIG_HIGH_RES_TIMERS=y' in kernel['config']:
         status['system_timer'] = "OK"
         print_status('system_timer')
         print("System timer is set at 1000 Hz and high resolution timers are "
@@ -212,14 +214,14 @@ def system_timer_check(kernel_config):
     print()
 
 
-def tickless_check(kernel_config):
+def tickless_check():
     wiki_anchor = '#installing_a_real-time_kernel'
 
     print("Tickless Kernel")
     print("===============")
 
-    if 'CONFIG_NO_HZ=y' not in kernel_config and \
-            'CONFIG_NO_HZ_IDLE=y' not in kernel_config:
+    if 'CONFIG_NO_HZ=y' not in kernel['config'] and \
+            'CONFIG_NO_HZ_IDLE=y' not in kernel['config']:
         status['no_hz'] = "WARNING"
         print_status('no_hz')
         print("Tickless timer support is not not set. Try enabling tickless "
@@ -233,36 +235,34 @@ def tickless_check(kernel_config):
     print()
 
 
-def preempt_rt_check(kernel_config):
+def preempt_rt_check():
     wiki_anchor = '#do_i_really_need_a_real-time_kernel'
     threadirqs = preempt = False
 
     print("Preempt RT")
     print("==========")
 
-    with open('/proc/cmdline', 'r') as f:
-        cmd_line = f.readline().strip().split()
-
-    if 'threadirqs' in cmd_line:
+    if 'threadirqs' in kernel['cmdline']:
         threadirqs = True
 
-    if 'CONFIG_PREEMPT_RT=y' in kernel_config or \
-            'CONFIG_PREEMPT_RT_FULL=y' in kernel_config:
+    if 'CONFIG_PREEMPT_RT=y' in kernel['config'] or \
+            'CONFIG_PREEMPT_RT_FULL=y' in kernel['config']:
         preempt = True
 
     if not threadirqs and not preempt:
         status['preempt_rt'] = "WARNING"
         print_status('preempt_rt')
-        print("Kernel without 'threadirqs' parameter or real-time "
-              f"capabilities found. See also: {wiki_url}{wiki_anchor}")
+        print(f"Kernel {kernel['release']} without 'threadirqs' parameter or "
+              "real-time capabilities found. See also: "
+              f"{wiki_url}{wiki_anchor}")
     elif threadirqs:
         status['preempt_rt'] = "OK"
         print_status('preempt_rt')
-        print("Kernel is using threaded IRQ's")
+        print(f"Kernel {kernel['release']} is using threaded IRQ's.")
     elif preempt:
         status['preempt_rt'] = "OK"
         print_status('preempt_rt')
-        print("System is running a real-time kernel.")
+        print(f"Kernel {kernel['release']} is a real-time kernel.")
 
     print()
 
@@ -273,10 +273,7 @@ def mitigations_check():
     print("Spectre/Meltdown mitigations")
     print("============================")
 
-    with open('/proc/cmdline', 'r') as f:
-        cmd_line = f.readline().strip().split()
-
-    if 'mitigations=off' not in cmd_line:
+    if 'mitigations=off' not in kernel['cmdline']:
         status['mitigations'] = "WARNING"
         print_status('mitigations')
         print("Kernel with Spectre/Meltdown mitigations found. This could "
@@ -374,7 +371,7 @@ def max_user_watches_check():
         status['max_user_watches'] = "OK"
         print_status('max_user_watches')
         print(f"max_user_watches has been set to {max_user_watches} which is "
-              "sufficient")
+              "sufficient.")
 
     print()
 
@@ -423,11 +420,11 @@ def main():
     audio_group_check()
     background_check()
     governor_check()
-    kernel_config = kernel_config_check()
-    high_res_timers_check(kernel_config)
-    system_timer_check(kernel_config)
-    tickless_check(kernel_config)
-    preempt_rt_check(kernel_config)
+    kernel_config_check()
+    high_res_timers_check()
+    system_timer_check()
+    tickless_check()
+    preempt_rt_check()
     mitigations_check()
     rt_prio_check()
     swappiness_check()
