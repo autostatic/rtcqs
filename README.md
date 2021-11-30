@@ -30,6 +30,7 @@ Basically the same as the realtimeconfigquickscan:
 
 Added features:
 - Spectre/Meltdown mitigations check
+- Qt GUI
 
 ## Usage
 
@@ -48,21 +49,36 @@ cd rtcqs-python
 And run the script.
 
 ```
-python3 ./rtcqs-python
-```
-
-Or add the executable bit and run the script directly.
-
-```
-cd rtcqs-python
-chmod +x rtcqs-python
 ./rtcqs-python
 ```
+
+## GUI
+
+To run the GUI first install the PySimpleGUIQt module either in your home directory or a virtual environment.
+
+### Home directory
+
+Make sure `pip` is installed, on Ubuntu this would be the `python3-pip` package. Then install PySimpleGUIQt for your user.
+
+```
+pip install PySimpleGUIQt
+```
+
+### Virtual Environment
+
+Make sure the virtual environment module is installed, on Ubuntu this would be `python3-venv`. Then create a virtual environment in the rtcqs-python directory and install PySimpleGUIQt in there.
+
+```
+python3 -m venv venv &&
+. $(pwd)/venv/bin/activate &&
+pip install --upgrade pip setuptools PySimpleGUIQt
+```
+
+You can now run the GUI with `./rtcqs_gui.py`.
 
 ## Future plans
 
 - Make the project more modular so it gets easier to add new features
-- Add a Qt GUI
 
 ## Contact
 
