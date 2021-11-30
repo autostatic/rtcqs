@@ -71,11 +71,16 @@ Make sure the virtual environment module is installed, on Ubuntu this would be `
 
 ```
 python3 -m venv venv &&
-. $(pwd)/venv/bin/activate &&
+. venv/bin/activate &&
 pip install --upgrade pip setuptools PySimpleGUIQt
 ```
 
-You can now run the GUI with `./rtcqs_gui.py`.
+You can now run the GUI with `./rtcqs_gui.py`. Next time you'd like to run the GUI load the virtual environment again and spin up the GUI.
+
+```
+. venv/bin/activate
+./rtcqs_gui.py
+```
 
 ![rtcqs_gui](https://user-images.githubusercontent.com/477316/144107441-d33ca27a-606c-4af1-8562-54d59e54b580.png)
 
