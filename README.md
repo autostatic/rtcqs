@@ -76,6 +76,8 @@ pip install --upgrade pip setuptools PySimpleGUIQt
 
 You can now run the GUI with `./rtcqs_gui.py`.
 
+![rtcqs_gui](https://user-images.githubusercontent.com/477316/144092270-7ab481ee-6b1c-40ce-90c1-cf83a6adea3f.png)
+
 ## Future plans
 
 - Make the project more modular so it gets easier to add new features
