@@ -12,6 +12,7 @@ Why a port to Python?
 - A Python port allowed me to slap a more permissive license on the code
 - Python probably has better GUI bindings which might make it easier to add a nice GUI
 - Seized the opportunity to remove obsolete features
+- Incentive to improve the documentation in the linuxaudio.org wiki
 
 ## Features
 
