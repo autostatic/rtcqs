@@ -34,18 +34,17 @@ def print_status(check):
 
 
 def root_check():
-    print_cli("Root Check")
-    print_cli("==========")
-
     if user == 'root':
         status['root'] = False
         output['root'] = "You are running this script as root. Please run " \
             "it as a regular user for the most reliable results."
-        
+
     else:
         status['root'] = True
         output['root'] = "Not running as root."
 
+    print_cli("Root Check")
+    print_cli("==========")
     print_status('root')
     print_cli(output['root'])
     print_cli("")
@@ -57,9 +56,6 @@ def audio_group_check():
     gids = os.getgrouplist(user, gid)
     groups = [grp.getgrgid(gid)[0] for gid in gids]
 
-    print_cli("Audio Group")
-    print_cli("===========")
-
     if 'audio' not in groups:
         status['audio_group'] = False
         output['audio_group'] = f"User {user} is currently not in the audio " \
@@ -70,6 +66,8 @@ def audio_group_check():
         status['audio_group'] = True
         output['audio_group'] = f"User {user} is in the audio group."
 
+    print_cli("Audio Group")
+    print_cli("===========")
     print_status('audio_group')
     print_cli(output['audio_group'])
     print_cli("")
@@ -85,9 +83,6 @@ def background_check():
     procs_list_dirs = [
         dir for dir in glob.glob(os.path.join('/proc/', '[0-9]*'))]
     procs_bad_list = []
-
-    print_cli("Background Processes")
-    print_cli("====================")
 
     for dir in procs_list_dirs:
         cmdline = f'{dir}/cmdline'
@@ -112,6 +107,8 @@ def background_check():
         output['background_process'] = "No resource intensive background " \
             "processes found."
 
+    print_cli("Background Processes")
+    print_cli("====================")
     print_status('background_process')
     print_cli(output['background_process'])
     print_cli("")
@@ -121,19 +118,15 @@ def governor_check():
     wiki_anchor = '#cpu_frequency_scaling'
     cpu_count = os.cpu_count()
     cpu_dir = '/sys/devices/system/cpu'
+    cpu_list = []
     cpu_governor = {}
     bad_governor = 0
-
-    print_cli("CPU Frequency Scaling")
-    print_cli("=====================")
 
     for cpu_nr in range(cpu_count):
         with open(
                 f'{cpu_dir}/cpu{cpu_nr}/cpufreq/scaling_governor', 'r') as f:
             cpu_governor[cpu_nr] = f.readline().strip()
-            print_cli(f'CPU {cpu_nr}: {cpu_governor[cpu_nr]}')
-
-    print_cli("")
+            cpu_list.append(f'CPU {cpu_nr}: {cpu_governor[cpu_nr]}')
 
     for value in cpu_governor.values():
         if value != 'performance':
@@ -151,6 +144,13 @@ def governor_check():
         output['governor'] = "The scaling governor of all CPU's is set at " \
             "performance."
 
+    print_cli("CPU Frequency Scaling")
+    print_cli("=====================")
+
+    for cpu in cpu_list:
+        print_cli(cpu)
+
+    print_cli("")
     print_status('governor')
     print_cli(output['governor'])
     print_cli("")
@@ -158,9 +158,6 @@ def governor_check():
 
 def kernel_config_check():
     kernel['release'] = os.uname().release
-
-    print_cli("Kernel Configuration")
-    print_cli("====================")
 
     with open('/proc/cmdline', 'r') as f:
         kernel['cmdline'] = f.readline().strip().split()
@@ -179,6 +176,8 @@ def kernel_config_check():
         status['kernel_config'] = False
         output['kernel_config'] = "Could not find kernel configuration."
 
+    print_cli("Kernel Configuration")
+    print_cli("====================")
     print_status('kernel_config')
     print_cli(output['kernel_config'])
     print_cli("")
@@ -187,19 +186,18 @@ def kernel_config_check():
 def high_res_timers_check():
     wiki_anchor = '#installing_a_real-time_kernel'
 
-    print_cli("High Resolution Timers")
-    print_cli("======================")
-
     if 'CONFIG_HIGH_RES_TIMERS=y' not in kernel['config']:
         status['high_res_timers'] = False
-        output['high_res_timers'] = "High resolution timers are not enabled. " \
-            "Try enabling high-resolution timers (CONFIG_HIGH_RES_TIMERS " \
-            "under 'Processor type and features'). See also: " \
-            f"{wiki_url}{wiki_anchor}"
+        output['high_res_timers'] = "High resolution timers are not " \
+            "enabled. Try enabling high-resolution timers " \
+            "(CONFIG_HIGH_RES_TIMERS) under 'Processor type and features'). " \
+            f"See also: {wiki_url}{wiki_anchor}"
     else:
         status['high_res_timers'] = True
         output['high_res_timers'] = "High resolution timers are enabled."
 
+    print_cli("High Resolution Timers")
+    print_cli("======================")
     print_status('high_res_timers')
     print_cli(output['high_res_timers'])
     print_cli("")
@@ -207,9 +205,6 @@ def high_res_timers_check():
 
 def system_timer_check():
     wiki_anchor = '#installing_a_real-time_kernel'
-
-    print_cli("System Timer")
-    print_cli("============")
 
     if 'CONFIG_HZ=1000' not in kernel['config'] and \
             'CONFIG_HIGH_RES_TIMERS=y' not in kernel['config']:
@@ -228,6 +223,8 @@ def system_timer_check():
         output['system_timer'] = "System timer is set at 1000 Hz and high " \
             "resolution timers are enabled."
 
+    print_cli("System Timer")
+    print_cli("============")
     print_status('system_timer')
     print_cli(output['system_timer'])
     print_cli("")
@@ -235,9 +232,6 @@ def system_timer_check():
 
 def tickless_check():
     wiki_anchor = '#installing_a_real-time_kernel'
-
-    print_cli("Tickless Kernel")
-    print_cli("===============")
 
     if 'CONFIG_NO_HZ=y' not in kernel['config'] and \
             'CONFIG_NO_HZ_IDLE=y' not in kernel['config']:
@@ -250,6 +244,8 @@ def tickless_check():
         status['tickless'] = True
         output['tickless'] = "System is using a tickless kernel."
 
+    print_cli("Tickless Kernel")
+    print_cli("===============")
     print_status('tickless')
     print_cli(output['tickless'])
     print_cli("")
@@ -258,9 +254,6 @@ def tickless_check():
 def preempt_rt_check():
     wiki_anchor = '#do_i_really_need_a_real-time_kernel'
     threadirqs = preempt = False
-
-    print_cli("Preempt RT")
-    print_cli("==========")
 
     if 'threadirqs' in kernel['cmdline']:
         threadirqs = True
@@ -283,6 +276,8 @@ def preempt_rt_check():
         output['preempt_rt'] = f"Kernel {kernel['release']} is a real-time " \
             "kernel."
 
+    print_cli("Preempt RT")
+    print_cli("==========")
     print_status('preempt_rt')
     print_cli(output['preempt_rt'])
     print_cli("")
@@ -290,9 +285,6 @@ def preempt_rt_check():
 
 def mitigations_check():
     wiki_anchor = "#disabling_spectre_and_meltdown_mitigations"
-
-    print_cli("Spectre/Meltdown mitigations")
-    print_cli("============================")
 
     if 'mitigations=off' not in kernel['cmdline']:
         status['mitigations'] = False
@@ -302,9 +294,11 @@ def mitigations_check():
     else:
         status['mitigations'] = True
         output['mitigations'] = "Spectre/Meltdown mitigations are disabled. " \
-            "Be warned that this makes your system more vulnerable for " \
-            "Spectre/Meltdown attacks."        
+            "Be warned that this makes your system more vulnerable to " \
+            "Spectre/Meltdown attacks."
 
+    print_cli("Spectre/Meltdown Mitigations")
+    print_cli("============================")
     print_status('mitigations')
     print_cli(output['mitigations'])
     print_cli("")
@@ -314,9 +308,6 @@ def rt_prio_check():
     wiki_anchor = '#limitsconfaudioconf'
     param = os.sched_param(80)
     sched = os.SCHED_RR
-
-    print_cli("RT priorities")
-    print_cli("=============")
 
     try:
         os.sched_setscheduler(0, sched, param)
@@ -329,6 +320,8 @@ def rt_prio_check():
         status['rt_prio'] = True
         output['rt_prio'] = "Realtime priorities can be set."
 
+    print_cli("RT Priorities")
+    print_cli("=============")
     print_status('rt_prio')
     print_cli(output['rt_prio'])
     print_cli("")
@@ -336,9 +329,6 @@ def rt_prio_check():
 
 def swappiness_check():
     wiki_anchor = '#sysctlconf'
-
-    print_cli("Swappiness")
-    print_cli("==========")
 
     with open('/proc/swaps', 'r') as f:
         lines = f.readlines()
@@ -365,6 +355,8 @@ def swappiness_check():
             status['swappiness'] = True
             output['swappiness'] = f"Swappiness is set at {swappiness}."
 
+    print_cli("Swappiness")
+    print_cli("==========")
     print_status('swappiness')
     print_cli(output['swappiness'])
     print_cli("")
@@ -372,9 +364,6 @@ def swappiness_check():
 
 def max_user_watches_check():
     wiki_anchor = "#sysctlconf"
-
-    print_cli("Maximum User Watches")
-    print_cli("====================")
 
     with open('/proc/sys/fs/inotify/max_user_watches', 'r') as f:
         max_user_watches = int(f.readline().strip())
@@ -391,6 +380,8 @@ def max_user_watches_check():
         output['max_user_watches'] = f"max_user_watches has been set to " \
             f"{max_user_watches} which is sufficient."
 
+    print_cli("Maximum User Watches")
+    print_cli("====================")
     print_status('max_user_watches')
     print_cli(output['max_user_watches'])
     print_cli("")
@@ -404,9 +395,6 @@ def filesystems_check():
     good_mounts_list = []
     bad_mounts_list = []
 
-    print_cli("Filesystems")
-    print_cli("===========")
-
     with open('/proc/mounts', 'r') as f:
         mounts = [l.split() for l in f.readlines()]
 
@@ -416,6 +404,9 @@ def filesystems_check():
             good_mounts_list.append(mount[1])
         elif mount_split in bad_fs or mount[1] in bad_mounts:
             bad_mounts_list.append(mount[1])
+
+    print_cli("Filesystems")
+    print_cli("===========")
 
     if len(good_mounts_list) > 0:
         good_mounts = ', '.join(good_mounts_list)
