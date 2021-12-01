@@ -1,8 +1,8 @@
-# rtcqs-python
+# rtcqs
 
 ## Introduction
 
-rtcqs-python, pronounced arteeseeks, is an attempt to port raboof's excellent [realtimeconfigquickscan](https://github.com/raboof/realtimeconfigquickscan) script to Python.
+rtcqs, pronounced arteeseeks, is an attempt to port raboof's excellent [realtimeconfigquickscan](https://github.com/raboof/realtimeconfigquickscan) script to Python.
 
 ## Rationale
 
@@ -16,7 +16,7 @@ Why a port to Python?
 
 ## Features
 
-Basically the same as the realtimeconfigquickscan:
+Basically the same as realtimeconfigquickscan:
 - Root check
 - Audio group check
 - Background process check
@@ -38,19 +38,19 @@ Added features:
 When writing this script I could rely on Python's built-in functionality so no extra modules are needed, just Python 3. To run the script first clone this repository.
 
 ```
-git clone https://github.com/autostatic/rtcqs-python.git
+git clone https://github.com/autostatic/rtcqs.git
 ```
 
 Then cd into the newly created directory.
 
 ```
-cd rtcqs-python
+cd rtcqs
 ```
 
 And run the script.
 
 ```
-./rtcqs-python
+./rtcqs
 ```
 
 ## GUI
