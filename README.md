@@ -50,7 +50,7 @@ cd rtcqs
 And run the script.
 
 ```
-./rtcqs
+./rtcqs.py
 ```
 
 ## GUI
@@ -67,7 +67,7 @@ pip install PySimpleGUIQt
 
 ### Virtual Environment
 
-Make sure the virtual environment module is installed, on Ubuntu this would be `python3-venv`. Then create a virtual environment in the rtcqs-python directory and install PySimpleGUIQt in there.
+Make sure the virtual environment module is installed, on Ubuntu this would be `python3-venv`. Then create a virtual environment in the rtcqs directory and install PySimpleGUIQt in there.
 
 ```
 python3 -m venv venv &&
