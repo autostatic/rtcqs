@@ -135,7 +135,7 @@ def governor_check():
     if bad_governor > 0:
         status['governor'] = False
         output['governor'] = "The scaling governor of one or more CPU's is " \
-            " not set to 'performance'. You can set the scaling governor to " \
+            "not set to 'performance'. You can set the scaling governor to " \
             "'performance' with 'cpupower frequency-set -g performance' " \
             "or 'cpufreq-set -r -g performance' (Debian/Ubuntu). See " \
             f"also: {wiki_url}{wiki_anchor}"
