@@ -3,6 +3,7 @@
 import PySimpleGUIQt as sg
 import rtcqs
 
+rtcqs.gui_status = True
 transparent_img = b'''iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABhGlDQ1BJQ0MgcHJvZmlsZQAAKJF9
 kT1Iw0AcxV9Ti6JVByuIKGSoThZERRy1CkWoEGqFVh1MLv2CJg1Jiouj4Fpw8GOx6uDirKuDqyAI
 foC4uTkpukiJ/0sKLWI9OO7Hu3uPu3eAUC0yzWobBzTdNhOxqJhKr4rtr+jCMPoRQI/MLGNOkuJo
@@ -125,7 +126,7 @@ def create_gui():
                 window[output_name].update('')
         elif event == 'OK':
             try:
-                rtcqs.gui()
+                rtcqs.main()
             except BaseException as err:
                 print(f'rtcqs exited with error {err=}, {type(err)=}')
 

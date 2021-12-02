@@ -427,12 +427,6 @@ def filesystems_check():
     print_cli("")
 
 
-def gui():
-    global gui_status
-    gui_status = True
-    main()
-
-
 def main():
     version()
     root_check()
