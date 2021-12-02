@@ -86,8 +86,12 @@ def background_check():
 
     for dir in procs_list_dirs:
         cmdline = f'{dir}/cmdline'
-        with open(cmdline, 'r') as f:
-            cmd = f.readline().replace('\x00', ' ').rstrip()
+        try:
+            with open(cmdline, 'r') as f:
+                cmd = f.readline().replace('\x00', ' ').rstrip()
+        except FileNotFoundError:
+            pass
+
         if cmd != '':
             procs_list.append(cmd)
 
