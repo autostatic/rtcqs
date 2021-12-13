@@ -431,6 +431,66 @@ def filesystems_check():
     print_cli("")
 
 
+def irq_check():
+    proc_interrupts = '/proc/interrupts'
+    bad_irq_list = []
+    good_irq_list = []
+    snd_list = ['audiodsp', 'snd_.*']
+    snd_re = '|'.join(snd_list)
+    usb_re = '[e,u,x]hci_hcd'
+    snd_compiled_re = re.compile(snd_re)
+    usb_compiled_re = re.compile(usb_re)
+
+    with open(proc_interrupts, 'r') as f:
+        irq_lines = [l.lower() for l in f.readlines()]
+
+    for irq_line in irq_lines:
+        irq = re.split(r'\s{2,}', irq_line)[0].rstrip(':').lstrip()
+        devices = re.split(r'\s{2,}', irq_line)[-1].strip()
+        device_list = devices.split(', ')
+
+        if snd_compiled_re.search(irq_line):
+            if len(device_list) > 1:
+                bad_irq_list.append(irq)
+                output[irq] = f"Soundcard {device_list[0]} with IRQ {irq} " \
+                    "shares its IRQ with the following other devices " \
+                    f"{devices}"
+            else:
+                good_irq_list.append(irq)
+                status['snd_irqs'] = True
+                output[irq] = f"Soundcard {device_list[0]} with IRQ {irq} " \
+                    "does not share its IRQ."
+        if usb_compiled_re.search(irq_line):
+            if len(device_list) > 1:
+                bad_irq_list.append(irq)
+                status['usb_irqs'] = False
+                output[irq] = f"Found USB port {device_list[0]} with IRQ " \
+                    f"{irq} that shares its IRQ with the following other " \
+                    f"devices: {devices}"
+            else:
+                good_irq_list.append(irq)
+                status['usb_irqs'] = True
+                output[irq] = f"USB port {device_list[0]} with IRQ {irq} " \
+                    "does not share its IRQ."
+
+    print_cli("IRQ's")
+    print_cli("=====")
+
+    if len(good_irq_list) > 0:
+        status['irqs'] = True
+        print_status('irqs')
+
+        for i in good_irq_list:
+            print_cli(output[i])
+
+    if len(bad_irq_list) > 0:
+        status['irqs'] = False
+        print_status('irqs')
+
+        for i in bad_irq_list:
+            print_cli(output[i])
+
+
 def main():
     version()
     root_check()
@@ -447,6 +507,7 @@ def main():
     swappiness_check()
     max_user_watches_check()
     filesystems_check()
+    irq_check()
 
 
 if __name__ == "__main__":
