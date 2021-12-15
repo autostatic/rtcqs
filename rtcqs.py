@@ -440,6 +440,7 @@ def irq_check():
     usb_re = '[e,u,x]hci_hcd'
     snd_compiled_re = re.compile(snd_re)
     usb_compiled_re = re.compile(usb_re)
+    output_irq = {}
 
     with open(proc_interrupts, 'r') as f:
         irq_lines = [l.lower() for l in f.readlines()]
@@ -452,43 +453,47 @@ def irq_check():
         if snd_compiled_re.search(irq_line):
             if len(device_list) > 1:
                 bad_irq_list.append(irq)
-                output[irq] = f"Soundcard {device_list[0]} with IRQ {irq} " \
+                output_irq[irq] = f"Soundcard {device_list[0]} with IRQ {irq} " \
                     "shares its IRQ with the following other devices " \
                     f"{devices}"
             else:
                 good_irq_list.append(irq)
                 status['snd_irqs'] = True
-                output[irq] = f"Soundcard {device_list[0]} with IRQ {irq} " \
+                output_irq[irq] = f"Soundcard {device_list[0]} with IRQ {irq} " \
                     "does not share its IRQ."
         if usb_compiled_re.search(irq_line):
             if len(device_list) > 1:
                 bad_irq_list.append(irq)
                 status['usb_irqs'] = False
-                output[irq] = f"Found USB port {device_list[0]} with IRQ " \
+                output_irq[irq] = f"Found USB port {device_list[0]} with IRQ " \
                     f"{irq} that shares its IRQ with the following other " \
                     f"devices: {devices}"
             else:
                 good_irq_list.append(irq)
                 status['usb_irqs'] = True
-                output[irq] = f"USB port {device_list[0]} with IRQ {irq} " \
+                output_irq[irq] = f"USB port {device_list[0]} with IRQ {irq} " \
                     "does not share its IRQ."
 
-    print_cli("IRQ's")
+    print_cli("IRQs")
     print_cli("=====")
 
     if len(good_irq_list) > 0:
         status['irqs'] = True
-        print_status('irqs')
+        output['irqs'] = '\n'.join([output_irq[i] for i in good_irq_list])
 
+        print_status('irqs')
+        
         for i in good_irq_list:
-            print_cli(output[i])
+            print_cli(output_irq[i])
 
     if len(bad_irq_list) > 0:
         status['irqs'] = False
+        output['irqs'] = '\n'.join([output_irq[i] for i in bad_irq_list])
+
         print_status('irqs')
 
         for i in bad_irq_list:
-            print_cli(output[i])
+            print_cli(output_irq[i])
 
 
 def main():
