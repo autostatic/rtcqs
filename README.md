@@ -84,6 +84,8 @@ You can now run the GUI with `./rtcqs_gui.py`. Next time you'd like to run the G
 
 ![rtcqs_gui](https://user-images.githubusercontent.com/477316/144107441-d33ca27a-606c-4af1-8562-54d59e54b580.png)
 
+![image](/attachments/f4d7a186-6ac4-4412-aeaf-e90da03c4938)
+
 ## Future plans
 
 - Make the project more modular so it gets easier to add new features
