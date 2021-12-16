@@ -31,6 +31,7 @@ Basically the same as realtimeconfigquickscan:
 
 Added features:
 - Spectre/Meltdown mitigations check
+- Basic IRQ check of sound cards and USB ports
 - Qt GUI
 
 ## Usage
@@ -87,7 +88,6 @@ You can now run the GUI with `./rtcqs_gui.py`. Next time you'd like to run the G
 ## Future plans
 
 - Make the project more modular so it gets easier to add new features
-- Add shared IRQ check for sound cards, USB ports or other audio related devices
 
 ## Contact
 
