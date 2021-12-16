@@ -16,7 +16,7 @@ output = {}
 
 
 def version():
-    print_cli("rtcqs - version 0.1.0")
+    print_cli("rtcqs - version 0.2.0")
     print_cli("")
 
 
