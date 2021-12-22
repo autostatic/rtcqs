@@ -10,13 +10,15 @@ import gzip
 user = getpass.getuser()
 wiki_url = "https://wiki.linuxaudio.org/wiki/system_configuration"
 gui_status = False
-status = {}
+version = "0.3.0"
+headline = {}
 kernel = {}
 output = {}
+status = {}
 
 
-def version():
-    print_cli("rtcqs - version 0.2.0")
+def print_version():
+    print_cli(f"rtcqs - version {version}")
     print_cli("")
 
 
@@ -34,6 +36,8 @@ def print_status(check):
 
 
 def root_check():
+    headline['root'] = "Root Check"
+
     if user == 'root':
         status['root'] = False
         output['root'] = "You are running this script as root. Please run " \
@@ -43,7 +47,7 @@ def root_check():
         status['root'] = True
         output['root'] = "Not running as root."
 
-    print_cli("Root Check")
+    print_cli(headline['root'])
     print_cli("==========")
     print_status('root')
     print_cli(output['root'])
@@ -51,6 +55,7 @@ def root_check():
 
 
 def audio_group_check():
+    headline['audio_group'] = "Audio Group"
     wiki_anchor = '#audio_group'
     gid = os.getgid()
     gids = os.getgrouplist(user, gid)
@@ -66,7 +71,7 @@ def audio_group_check():
         status['audio_group'] = True
         output['audio_group'] = f"User {user} is in the audio group."
 
-    print_cli("Audio Group")
+    print_cli(headline['audio_group'])
     print_cli("===========")
     print_status('audio_group')
     print_cli(output['audio_group'])
@@ -74,6 +79,7 @@ def audio_group_check():
 
 
 def background_check():
+    headline['background_process'] = "Background Processes"
     wiki_anchor = \
         '#disabling_resource-intensive_daemons_services_and_processes'
     procs = ['powersaved', 'kpowersave']
@@ -111,7 +117,7 @@ def background_check():
         output['background_process'] = "No resource intensive background " \
             "processes found."
 
-    print_cli("Background Processes")
+    print_cli(headline['background_process'])
     print_cli("====================")
     print_status('background_process')
     print_cli(output['background_process'])
@@ -119,6 +125,7 @@ def background_check():
 
 
 def governor_check():
+    headline['governor'] = "CPU Frequency Scaling"
     wiki_anchor = '#cpu_frequency_scaling'
     cpu_count = os.cpu_count()
     cpu_dir = '/sys/devices/system/cpu'
@@ -148,7 +155,7 @@ def governor_check():
         output['governor'] = "The scaling governor of all CPU's is set at " \
             "performance."
 
-    print_cli("CPU Frequency Scaling")
+    print_cli(headline['governor'])
     print_cli("=====================")
 
     for cpu in cpu_list:
@@ -161,6 +168,7 @@ def governor_check():
 
 
 def kernel_config_check():
+    headline['kernel_config'] = "Kernel Configuration"
     kernel['release'] = os.uname().release
 
     with open('/proc/cmdline', 'r') as f:
@@ -180,7 +188,7 @@ def kernel_config_check():
         status['kernel_config'] = False
         output['kernel_config'] = "Could not find kernel configuration."
 
-    print_cli("Kernel Configuration")
+    print_cli(headline['kernel_config'])
     print_cli("====================")
     print_status('kernel_config')
     print_cli(output['kernel_config'])
@@ -188,6 +196,7 @@ def kernel_config_check():
 
 
 def high_res_timers_check():
+    headline['high_res_timers'] = "High Resolution Timers"
     wiki_anchor = '#installing_a_real-time_kernel'
 
     if 'CONFIG_HIGH_RES_TIMERS=y' not in kernel['config']:
@@ -200,7 +209,7 @@ def high_res_timers_check():
         status['high_res_timers'] = True
         output['high_res_timers'] = "High resolution timers are enabled."
 
-    print_cli("High Resolution Timers")
+    print_cli(headline['high_res_timers'])
     print_cli("======================")
     print_status('high_res_timers')
     print_cli(output['high_res_timers'])
@@ -208,6 +217,7 @@ def high_res_timers_check():
 
 
 def system_timer_check():
+    headline['system_timer'] = "System Timer"
     wiki_anchor = '#installing_a_real-time_kernel'
 
     if 'CONFIG_HZ=1000' not in kernel['config'] and \
@@ -227,7 +237,7 @@ def system_timer_check():
         output['system_timer'] = "System timer is set at 1000 Hz and high " \
             "resolution timers are enabled."
 
-    print_cli("System Timer")
+    print_cli(headline['system_timer'])
     print_cli("============")
     print_status('system_timer')
     print_cli(output['system_timer'])
@@ -235,6 +245,7 @@ def system_timer_check():
 
 
 def tickless_check():
+    headline['tickless'] = "Tickless Kernel"
     wiki_anchor = '#installing_a_real-time_kernel'
 
     if 'CONFIG_NO_HZ=y' not in kernel['config'] and \
@@ -248,7 +259,7 @@ def tickless_check():
         status['tickless'] = True
         output['tickless'] = "System is using a tickless kernel."
 
-    print_cli("Tickless Kernel")
+    print_cli(headline['tickless'])
     print_cli("===============")
     print_status('tickless')
     print_cli(output['tickless'])
@@ -256,6 +267,7 @@ def tickless_check():
 
 
 def preempt_rt_check():
+    headline['preempt_rt'] = "Preempt RT"
     wiki_anchor = '#do_i_really_need_a_real-time_kernel'
     threadirqs = preempt = False
 
@@ -280,7 +292,7 @@ def preempt_rt_check():
         output['preempt_rt'] = f"Kernel {kernel['release']} is a real-time " \
             "kernel."
 
-    print_cli("Preempt RT")
+    print_cli(headline['preempt_rt'])
     print_cli("==========")
     print_status('preempt_rt')
     print_cli(output['preempt_rt'])
@@ -288,6 +300,7 @@ def preempt_rt_check():
 
 
 def mitigations_check():
+    headline['mitigations'] = "Spectre/Meltdown Mitigations"
     wiki_anchor = "#disabling_spectre_and_meltdown_mitigations"
 
     if 'mitigations=off' not in kernel['cmdline']:
@@ -301,7 +314,7 @@ def mitigations_check():
             "Be warned that this makes your system more vulnerable to " \
             "Spectre/Meltdown attacks."
 
-    print_cli("Spectre/Meltdown Mitigations")
+    print_cli(headline['mitigations'])
     print_cli("============================")
     print_status('mitigations')
     print_cli(output['mitigations'])
@@ -309,6 +322,7 @@ def mitigations_check():
 
 
 def rt_prio_check():
+    headline['rt_prio'] = "RT Priorities"
     wiki_anchor = '#limitsconfaudioconf'
     param = os.sched_param(80)
     sched = os.SCHED_RR
@@ -324,7 +338,7 @@ def rt_prio_check():
         status['rt_prio'] = True
         output['rt_prio'] = "Realtime priorities can be set."
 
-    print_cli("RT Priorities")
+    print_cli(headline['rt_prio'])
     print_cli("=============")
     print_status('rt_prio')
     print_cli(output['rt_prio'])
@@ -332,6 +346,7 @@ def rt_prio_check():
 
 
 def swappiness_check():
+    headline['swappiness'] = "Swappiness"
     wiki_anchor = '#sysctlconf'
 
     with open('/proc/swaps', 'r') as f:
@@ -359,7 +374,7 @@ def swappiness_check():
             status['swappiness'] = True
             output['swappiness'] = f"Swappiness is set at {swappiness}."
 
-    print_cli("Swappiness")
+    print_cli(headline['swappiness'])
     print_cli("==========")
     print_status('swappiness')
     print_cli(output['swappiness'])
@@ -367,6 +382,7 @@ def swappiness_check():
 
 
 def max_user_watches_check():
+    headline['max_user_watches'] = "Maximum User Watches"
     wiki_anchor = "#sysctlconf"
 
     with open('/proc/sys/fs/inotify/max_user_watches', 'r') as f:
@@ -384,7 +400,7 @@ def max_user_watches_check():
         output['max_user_watches'] = f"max_user_watches has been set to " \
             f"{max_user_watches} which is sufficient."
 
-    print_cli("Maximum User Watches")
+    print_cli(headline['max_user_watches'])
     print_cli("====================")
     print_status('max_user_watches')
     print_cli(output['max_user_watches'])
@@ -392,6 +408,7 @@ def max_user_watches_check():
 
 
 def filesystems_check():
+    headline['filesystems'] = "Filesystems"
     wiki_anchor = "#filesystems"
     good_fs = ['ext4', 'xfs', 'zfs', 'btrfs']
     bad_fs = ['fuse', 'reiserfs', 'nfs']
@@ -409,7 +426,7 @@ def filesystems_check():
         elif mount_split in bad_fs or mount[1] in bad_mounts:
             bad_mounts_list.append(mount[1])
 
-    print_cli("Filesystems")
+    print_cli(headline['filesystems'])
     print_cli("===========")
 
     if len(good_mounts_list) > 0:
@@ -432,6 +449,7 @@ def filesystems_check():
 
 
 def irq_check():
+    headline['irqs'] = "IRQs"
     proc_interrupts = '/proc/interrupts'
     bad_irq_list = []
     good_irq_list = []
@@ -453,28 +471,28 @@ def irq_check():
         if snd_compiled_re.search(irq_line):
             if len(device_list) > 1:
                 bad_irq_list.append(irq)
-                output_irq[irq] = f"Soundcard {device_list[0]} with IRQ {irq} " \
-                    "shares its IRQ with the following other devices " \
+                output_irq[irq] = f"Soundcard {device_list[0]} with IRQ " \
+                    f"{irq} shares its IRQ with the following other devices " \
                     f"{devices}"
             else:
                 good_irq_list.append(irq)
                 status['snd_irqs'] = True
-                output_irq[irq] = f"Soundcard {device_list[0]} with IRQ {irq} " \
-                    "does not share its IRQ."
+                output_irq[irq] = f"Soundcard {device_list[0]} with IRQ " \
+                    f"{irq} does not share its IRQ."
         if usb_compiled_re.search(irq_line):
             if len(device_list) > 1:
                 bad_irq_list.append(irq)
                 status['usb_irqs'] = False
-                output_irq[irq] = f"Found USB port {device_list[0]} with IRQ " \
-                    f"{irq} that shares its IRQ with the following other " \
-                    f"devices: {devices}"
+                output_irq[irq] = f"Found USB port {device_list[0]} with " \
+                    f"IRQ {irq} that shares its IRQ with the following " \
+                    f"other devices: {devices}"
             else:
                 good_irq_list.append(irq)
                 status['usb_irqs'] = True
-                output_irq[irq] = f"USB port {device_list[0]} with IRQ {irq} " \
-                    "does not share its IRQ."
+                output_irq[irq] = f"USB port {device_list[0]} with IRQ " \
+                    f"{irq} does not share its IRQ."
 
-    print_cli("IRQs")
+    print_cli(headline['irqs'])
     print_cli("=====")
 
     if len(good_irq_list) > 0:
@@ -482,7 +500,7 @@ def irq_check():
         output['irqs'] = '\n'.join([output_irq[i] for i in good_irq_list])
 
         print_status('irqs')
-        
+
         for i in good_irq_list:
             print_cli(output_irq[i])
 
@@ -497,7 +515,7 @@ def irq_check():
 
 
 def main():
-    version()
+    print_version()
     root_check()
     audio_group_check()
     background_check()
