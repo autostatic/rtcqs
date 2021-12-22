@@ -10,7 +10,7 @@ import gzip
 user = getpass.getuser()
 wiki_url = "https://wiki.linuxaudio.org/wiki/system_configuration"
 gui_status = False
-version = "0.3.0"
+version = "0.3.1"
 headline = {}
 kernel = {}
 output = {}
@@ -178,7 +178,7 @@ def kernel_config_check():
         status['kernel_config'] = True
         output['kernel_config'] = "Valid kernel configuration found."
         with gzip.open('/proc/config.gz', 'r') as f:
-            kernel['config'] = [l.strip() for l in f.readlines()]
+            kernel['config'] = [l.strip().decode() for l in f.readlines()]
     elif os.path.exists(f'/boot/config-{kernel["release"]}'):
         status['kernel_config'] = True
         output['kernel_config'] = "Valid kernel configuration found."
