@@ -39,7 +39,7 @@ Added features:
 When writing this script I could rely on Python's built-in functionality so no extra modules are needed, just Python 3. To run the script first clone this repository.
 
 ```
-git clone https://github.com/autostatic/rtcqs.git
+git clone https://codeberg.org/rtcqs/rtcqs.git
 ```
 
 Then cd into the newly created directory.
@@ -83,7 +83,22 @@ You can now run the GUI with `./rtcqs_gui.py`. Next time you'd like to run the G
 ./rtcqs_gui.py
 ```
 
-![rtcqs_gui](https://user-images.githubusercontent.com/477316/144107441-d33ca27a-606c-4af1-8562-54d59e54b580.png)
+### Overview
+
+When running the GUI it will imediately show the results of the checks. All checks have their own tab. Each tab title consists of a symbol that shows the check result and the name of the check. A ✔ means the check was successful while a ✘ means rtcqs encountered an issue. This way you can quickly spot which checks have issues.
+
+Clicking 'Cancel' will close rtcqs. Clicking 'About' will bring up a popup window which displays the version and a short description.
+
+<center><em>
+
+![rtcqs_analysis](https://codeberg.org/attachments/8aaff793-d9b5-42f1-8c98-3d98ef31853d)<br>
+rtcqs main window
+<br>
+<br>
+![rtcqs_about](https://codeberg.org/attachments/832bbca7-24d2-4a36-8e04-3f6a03438243)<br>
+rtcqs about window
+
+</em></center>
 
 ## Future plans
 
