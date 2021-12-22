@@ -89,18 +89,16 @@ When running the GUI it will imediately show the results of the checks. All chec
 
 Clicking 'Cancel' will close rtcqs. Clicking 'About' will bring up a popup window which displays the version and a short description.
 
-<div style="text-align:center"><em>
-
+<p align="center">
 <img src="https://codeberg.org/attachments/8aaff793-d9b5-42f1-8c98-3d98ef31853d">
 <br>
-rtcqs main window
+<em>rtcqs main window</em>
 <br>
 <br>
 <img src="https://codeberg.org/attachments/832bbca7-24d2-4a36-8e04-3f6a03438243">
 <br>
-rtcqs about window
-
-</em></div>
+<em>rtcqs about window</em>
+</p>
 
 ## Future plans
 
