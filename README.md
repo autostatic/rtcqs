@@ -85,7 +85,7 @@ You can now run the GUI with `./rtcqs_gui.py`. Next time you'd like to run the G
 
 ### Overview
 
-When running the GUI it will imediately show the results of the checks. All checks have their own tab. Each tab title consists of a symbol that shows the check result and the name of the check. A ✔ means the check was successful while a ✘ means rtcqs encountered an issue. This way you can quickly spot which checks have issues.
+When running the GUI it will immediately show the results of the checks. All checks have their own tab. Each tab title consists of a symbol that shows the check result and the name of the check. A ✔ means the check was successful while a ✘ means rtcqs encountered an issue. This way you can quickly spot which checks have issues.
 
 Clicking 'Cancel' will close rtcqs. Clicking 'About' will bring up a popup window which displays the version and a short description.
 
