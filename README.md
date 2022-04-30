@@ -19,9 +19,10 @@ Basically the same as realtimeconfigquickscan:
 - max_user_watches check
 - Filesystem check
 
-Added features:
+Additional features:
 - Spectre/Meltdown mitigations check
 - Basic IRQ check of sound cards and USB ports
+- Power management check
 - Qt GUI
 
 ## Usage
