@@ -10,7 +10,7 @@ import gzip
 user = getpass.getuser()
 wiki_url = "https://wiki.linuxaudio.org/wiki/system_configuration"
 gui_status = False
-version = "0.4.1"
+version = "0.4.2"
 headline = {}
 kernel = {}
 output = {}
