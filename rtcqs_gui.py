@@ -72,6 +72,9 @@ def create_gui():
             create_tab(' Filesystems', 'filesystems'),
             create_tab(' IRQs', 'irqs'),
             ], key='tab_group3')],
+        [sg.TabGroup([
+            create_tab(' Power Management', 'power_management'),
+            ], key='tab_group4')],
         [sg.Button(button_text='About', size=(25, 1), pad=((0, 0), (0, 0))),
          sg.Stretch(), sg.Cancel(size=(25, 1), pad=((0, 0), (0, 0)))]]
 
