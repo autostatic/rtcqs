@@ -10,7 +10,7 @@ import gzip
 user = getpass.getuser()
 wiki_url = "https://wiki.linuxaudio.org/wiki/system_configuration"
 gui_status = False
-version = "0.3.1"
+version = "0.4.0"
 headline = {}
 kernel = {}
 output = {}
@@ -35,51 +35,55 @@ def print_status(check):
             print('[ \033[31mWARNING\033[00m ] ', end='')
 
 
-def root_check():
-    headline['root'] = "Root Check"
-
-    if user == 'root':
-        status['root'] = False
-        output['root'] = "You are running this script as root. Please run " \
-            "it as a regular user for the most reliable results."
-
-    else:
-        status['root'] = True
-        output['root'] = "Not running as root."
-
-    print_cli(headline['root'])
-    print_cli("==========")
-    print_status('root')
-    print_cli(output['root'])
+def format_output(check):
+    char_count = int(len(headline[check]))
+    print_cli(headline[check])
+    print_cli(char_count * "=")
+    print_status(check)
+    print_cli(output[check])
     print_cli("")
 
 
+def root_check():
+    check = 'root'
+    headline[check] = "Root User"
+
+    if user == 'root':
+        status[check] = False
+        output[check] = "You are running this script as root. Please run " \
+            "it as a regular user for the most reliable results."
+
+    else:
+        status[check] = True
+        output[check] = "Not running as root."
+
+    format_output(check)
+
+
 def audio_group_check():
-    headline['audio_group'] = "Audio Group"
+    check = 'audio_group'
+    headline[check] = "Audio Group"
     wiki_anchor = '#audio_group'
     gid = os.getgid()
     gids = os.getgrouplist(user, gid)
     groups = [grp.getgrgid(gid)[0] for gid in gids]
 
     if 'audio' not in groups:
-        status['audio_group'] = False
-        output['audio_group'] = f"User {user} is currently not in the audio " \
+        status[check] = False
+        output[check] = f"User {user} is currently not in the audio " \
             "group. Add yourself to the audio group with 'sudo usermod -a " \
             f"-G audio {user}' and log in again. See also: " \
             f"{wiki_url}{wiki_anchor}"
     else:
-        status['audio_group'] = True
-        output['audio_group'] = f"User {user} is in the audio group."
+        status[check] = True
+        output[check] = f"User {user} is in the audio group."
 
-    print_cli(headline['audio_group'])
-    print_cli("===========")
-    print_status('audio_group')
-    print_cli(output['audio_group'])
-    print_cli("")
+    format_output(check)
 
 
 def background_check():
-    headline['background_process'] = "Background Processes"
+    check = 'background_process'
+    headline[check] = "Background Processes"
     wiki_anchor = \
         '#disabling_resource-intensive_daemons_services_and_processes'
     procs = ['powersaved', 'kpowersave']
@@ -106,26 +110,23 @@ def background_check():
             procs_bad_list.append(proc)
 
     if len(procs_bad_list) > 0:
-        status['background_process'] = False
+        status[check] = False
         for proc in procs_bad_list:
-            output['background_process'] = "Found resource-intensive " \
+            output[check] = "Found resource-intensive " \
                 f"process '{proc}'. Please try stopping and/or disabling " \
                 "this process."
         print_cli(f"See also: {wiki_url}{wiki_anchor}")
     else:
-        status['background_process'] = True
-        output['background_process'] = "No resource intensive background " \
+        status[check] = True
+        output[check] = "No resource intensive background " \
             "processes found."
 
-    print_cli(headline['background_process'])
-    print_cli("====================")
-    print_status('background_process')
-    print_cli(output['background_process'])
-    print_cli("")
+    format_output(check)
 
 
 def governor_check():
-    headline['governor'] = "CPU Frequency Scaling"
+    check = 'governor'
+    headline[check] = "CPU Frequency Scaling"
     wiki_anchor = '#cpu_frequency_scaling'
     cpu_count = os.cpu_count()
     cpu_dir = '/sys/devices/system/cpu'
@@ -144,130 +145,110 @@ def governor_check():
             bad_governor += 1
 
     if bad_governor > 0:
-        status['governor'] = False
-        output['governor'] = "The scaling governor of one or more CPU's is " \
+        status[check] = False
+        output[check] = "The scaling governor of one or more CPU's is " \
             "not set to 'performance'. You can set the scaling governor to " \
             "'performance' with 'cpupower frequency-set -g performance' " \
             "or 'cpufreq-set -r -g performance' (Debian/Ubuntu). See " \
             f"also: {wiki_url}{wiki_anchor}"
     else:
-        status['governor'] = True
-        output['governor'] = "The scaling governor of all CPU's is set at " \
+        status[check] = True
+        output[check] = "The scaling governor of all CPU's is set at " \
             "performance."
 
-    print_cli(headline['governor'])
-    print_cli("=====================")
-
-    for cpu in cpu_list:
-        print_cli(cpu)
-
-    print_cli("")
-    print_status('governor')
-    print_cli(output['governor'])
-    print_cli("")
+    format_output(check)
 
 
 def kernel_config_check():
-    headline['kernel_config'] = "Kernel Configuration"
+    check = 'kernel_config'
+    headline[check] = "Kernel Configuration"
     kernel['release'] = os.uname().release
 
     with open('/proc/cmdline', 'r') as f:
         kernel['cmdline'] = f.readline().strip().split()
 
     if os.path.exists('/proc/config.gz'):
-        status['kernel_config'] = True
-        output['kernel_config'] = "Valid kernel configuration found."
+        status[check] = True
+        output[check] = "Valid kernel configuration found."
         with gzip.open('/proc/config.gz', 'r') as f:
             kernel['config'] = [l.strip().decode() for l in f.readlines()]
     elif os.path.exists(f'/boot/config-{kernel["release"]}'):
-        status['kernel_config'] = True
-        output['kernel_config'] = "Valid kernel configuration found."
+        status[check] = True
+        output[check] = "Valid kernel configuration found."
         with open(f'/boot/config-{kernel["release"]}', 'r') as f:
             kernel['config'] = [l.strip() for l in f.readlines()]
     else:
-        status['kernel_config'] = False
-        output['kernel_config'] = "Could not find kernel configuration."
+        status[check] = False
+        output[check] = "Could not find kernel configuration."
 
-    print_cli(headline['kernel_config'])
-    print_cli("====================")
-    print_status('kernel_config')
-    print_cli(output['kernel_config'])
-    print_cli("")
+    format_output(check)
 
 
 def high_res_timers_check():
-    headline['high_res_timers'] = "High Resolution Timers"
+    check = 'high_res_timers'
+    headline[check] = "High Resolution Timers"
     wiki_anchor = '#installing_a_real-time_kernel'
 
     if 'CONFIG_HIGH_RES_TIMERS=y' not in kernel['config']:
-        status['high_res_timers'] = False
-        output['high_res_timers'] = "High resolution timers are not " \
+        status[check] = False
+        output[check] = "High resolution timers are not " \
             "enabled. Try enabling high-resolution timers " \
             "(CONFIG_HIGH_RES_TIMERS) under 'Processor type and features'). " \
             f"See also: {wiki_url}{wiki_anchor}"
     else:
-        status['high_res_timers'] = True
-        output['high_res_timers'] = "High resolution timers are enabled."
+        status[check] = True
+        output[check] = "High resolution timers are enabled."
 
-    print_cli(headline['high_res_timers'])
-    print_cli("======================")
-    print_status('high_res_timers')
-    print_cli(output['high_res_timers'])
-    print_cli("")
+    format_output(check)
 
 
 def system_timer_check():
-    headline['system_timer'] = "System Timer"
+    check = 'system_timer'
+    headline[check] = "System Timer"
     wiki_anchor = '#installing_a_real-time_kernel'
 
     if 'CONFIG_HZ=1000' not in kernel['config'] and \
             'CONFIG_HIGH_RES_TIMERS=y' not in kernel['config']:
-        status['system_timer'] = False
-        output['system_timer'] = "CONFIG_HZ is not set at 1000 Hz. Try " \
+        status[check] = False
+        output[check] = "CONFIG_HZ is not set at 1000 Hz. Try " \
             "setting CONFIG_HZ to 1000 and/or enabling " \
             f"CONFIG_HIGH_RES_TIMERS. See also: {wiki_url}{wiki_anchor}"
     elif 'CONFIG_HZ=1000' not in kernel['config'] and \
             'CONFIG_HIGH_RES_TIMERS=y' in kernel['config']:
-        status['system_timer'] = True
-        output['system_timer'] = "System timer is not 1000 Hz but high " \
+        status[check] = True
+        output[check] = "System timer is not 1000 Hz but high " \
             "resolution timers are enabled."
     elif 'CONFIG_HZ=1000' in kernel['config'] and \
             'CONFIG_HIGH_RES_TIMERS=y' in kernel['config']:
-        status['system_timer'] = True
-        output['system_timer'] = "System timer is set at 1000 Hz and high " \
+        status[check] = True
+        output[check] = "System timer is set at 1000 Hz and high " \
             "resolution timers are enabled."
 
-    print_cli(headline['system_timer'])
-    print_cli("============")
-    print_status('system_timer')
-    print_cli(output['system_timer'])
-    print_cli("")
+    format_output(check)
 
 
 def tickless_check():
-    headline['tickless'] = "Tickless Kernel"
+    check = 'tickless'
+    headline[check] = "Tickless Kernel"
     wiki_anchor = '#installing_a_real-time_kernel'
 
     if 'CONFIG_NO_HZ=y' not in kernel['config'] and \
             'CONFIG_NO_HZ_IDLE=y' not in kernel['config']:
-        status['tickless'] = False
-        output['tickless'] = "Tickless timer support is not not set. Try " \
+        status[check] = False
+        output[check] = "Tickless timer support is not not set. Try " \
             "enabling tickless timer support (CONFIG_NO_HZ_IDLE, or " \
             "CONFIG_NO_HZ in older kernels). See also: " \
             f"{wiki_url}{wiki_anchor}"
     else:
-        status['tickless'] = True
-        output['tickless'] = "System is using a tickless kernel."
+        status[check] = True
+        output[check] = "System is using a tickless kernel."
 
-    print_cli(headline['tickless'])
-    print_cli("===============")
-    print_status('tickless')
-    print_cli(output['tickless'])
-    print_cli("")
+    format_output(check)
 
 
 def preempt_rt_check():
-    headline['preempt_rt'] = "Preempt RT"
+    check = 'preempt_rt'
+    headline[check] = "Preempt RT"
     wiki_anchor = '#do_i_really_need_a_real-time_kernel'
     threadirqs = preempt = False
 
@@ -279,50 +260,44 @@ def preempt_rt_check():
         preempt = True
 
     if not threadirqs and not preempt:
-        status['preempt_rt'] = False
-        output['preempt_rt'] = f"Kernel {kernel['release']} without " \
+        status[check] = False
+        output[check] = f"Kernel {kernel['release']} without " \
             "'threadirqs' parameter or real-time capabilities found. See " \
             f"also: {wiki_url}{wiki_anchor}"
     elif threadirqs:
-        status['preempt_rt'] = True
-        output['preempt_rt'] = f"Kernel {kernel['release']} is using " \
+        status[check] = True
+        output[check] = f"Kernel {kernel['release']} is using " \
             "threaded IRQ's."
     elif preempt:
-        status['preempt_rt'] = True
-        output['preempt_rt'] = f"Kernel {kernel['release']} is a real-time " \
+        status[check] = True
+        output[check] = f"Kernel {kernel['release']} is a real-time " \
             "kernel."
 
-    print_cli(headline['preempt_rt'])
-    print_cli("==========")
-    print_status('preempt_rt')
-    print_cli(output['preempt_rt'])
-    print_cli("")
+    format_output(check)
 
 
 def mitigations_check():
-    headline['mitigations'] = "Spectre/Meltdown Mitigations"
+    check = 'mitigations'
+    headline[check] = "Spectre/Meltdown Mitigations"
     wiki_anchor = "#disabling_spectre_and_meltdown_mitigations"
 
     if 'mitigations=off' not in kernel['cmdline']:
-        status['mitigations'] = False
-        output['mitigations'] = "Kernel with Spectre/Meltdown mitigations " \
+        status[check] = False
+        output[check] = "Kernel with Spectre/Meltdown mitigations " \
             "found. This could have a negative impact on the performance of " \
             f"your system. See also: {wiki_url}{wiki_anchor}"
     else:
-        status['mitigations'] = True
-        output['mitigations'] = "Spectre/Meltdown mitigations are disabled. " \
+        status[check] = True
+        output[check] = "Spectre/Meltdown mitigations are disabled. " \
             "Be warned that this makes your system more vulnerable to " \
             "Spectre/Meltdown attacks."
 
-    print_cli(headline['mitigations'])
-    print_cli("============================")
-    print_status('mitigations')
-    print_cli(output['mitigations'])
-    print_cli("")
+    format_output(check)
 
 
 def rt_prio_check():
-    headline['rt_prio'] = "RT Priorities"
+    check = 'rt_prio'
+    headline[check] = "RT Priorities"
     wiki_anchor = '#limitsconfaudioconf'
     param = os.sched_param(80)
     sched = os.SCHED_RR
@@ -330,23 +305,20 @@ def rt_prio_check():
     try:
         os.sched_setscheduler(0, sched, param)
     except PermissionError as e:
-        status['rt_prio'] = False
-        output['rt_prio'] = "Could not assign a 80 rtprio SCHED_FIFO value " \
+        status[check] = False
+        output[check] = "Could not assign a 80 rtprio SCHED_FIFO value " \
             f"due to the following error: {e}. Set up limits.conf. See also " \
             f"{wiki_url}{wiki_anchor}"
     else:
-        status['rt_prio'] = True
-        output['rt_prio'] = "Realtime priorities can be set."
+        status[check] = True
+        output[check] = "Realtime priorities can be set."
 
-    print_cli(headline['rt_prio'])
-    print_cli("=============")
-    print_status('rt_prio')
-    print_cli(output['rt_prio'])
-    print_cli("")
+    format_output(check)
 
 
 def swappiness_check():
-    headline['swappiness'] = "Swappiness"
+    check = 'swappiness'
+    headline[check] = "Swappiness"
     wiki_anchor = '#sysctlconf'
 
     with open('/proc/swaps', 'r') as f:
@@ -354,8 +326,8 @@ def swappiness_check():
 
     if len(lines) < 2:
         swap = False
-        status['swappiness'] = True
-        output['swappiness'] = "Your system is configured without swap, " \
+        status[check] = True
+        output[check] = "Your system is configured without swap, " \
             "setting swappiness does not apply."
     else:
         swap = True
@@ -365,46 +337,39 @@ def swappiness_check():
             swappiness = int(f.readline().strip())
 
         if swappiness > 10:
-            status['swappiness'] = False
-            output['swappiness'] = f"vm.swappiness is set to {swappiness} " \
+            status[check] = False
+            output[check] = f"vm.swappiness is set to {swappiness} " \
                 "which is too high. Set swappiness to a lower value by " \
                 "adding 'vm.swappiness=10' to /etc/sysctl.conf and run " \
                 f"'sysctl --system'. See also {wiki_url}{wiki_anchor}"
         else:
-            status['swappiness'] = True
-            output['swappiness'] = f"Swappiness is set at {swappiness}."
+            status[check] = True
+            output[check] = f"Swappiness is set at {swappiness}."
 
-    print_cli(headline['swappiness'])
-    print_cli("==========")
-    print_status('swappiness')
-    print_cli(output['swappiness'])
-    print_cli("")
+    format_output(check)
 
 
 def max_user_watches_check():
-    headline['max_user_watches'] = "Maximum User Watches"
+    check = 'max_user_watches'
+    headline[check] = "Maximum User Watches"
     wiki_anchor = "#sysctlconf"
 
     with open('/proc/sys/fs/inotify/max_user_watches', 'r') as f:
         max_user_watches = int(f.readline().strip())
 
     if max_user_watches < 524288:
-        status['max_user_watches'] = False
-        output['max_user_watches'] = f"The max_user_watches setting is set " \
+        status[check] = False
+        output[check] = f"The max_user_watches setting is set " \
             f"to {max_user_watches} which might be too low when working " \
             "with a high number of files that change a lot. Try increasing " \
             "the setting to at least 524288 or higher. See also " \
             f"{wiki_url}{wiki_anchor}"
     else:
-        status['max_user_watches'] = True
-        output['max_user_watches'] = f"max_user_watches has been set to " \
+        status[check] = True
+        output[check] = f"max_user_watches has been set to " \
             f"{max_user_watches} which is sufficient."
 
-    print_cli(headline['max_user_watches'])
-    print_cli("====================")
-    print_status('max_user_watches')
-    print_cli(output['max_user_watches'])
-    print_cli("")
+    format_output(check)
 
 
 def filesystems_check():
@@ -513,6 +478,35 @@ def irq_check():
         for i in bad_irq_list:
             print_cli(output_irq[i])
 
+    print_cli("")
+
+
+def power_management_check():
+    check = 'power_management'
+    headline[check] = "Power Management"
+    stat_data = os.stat('/dev/cpu_dma_latency')
+    file_permissions = oct(stat_data.st_mode)[-3:]
+    file_gid = stat_data.st_gid
+    file_group = grp.getgrgid(file_gid)[0]
+
+    if file_permissions == 660 and file_group == 'audio':
+        status[check] = True
+        output[check] = "Power management can be controlled from user " \
+                        "space. This enables DAW's like Ardour and Reaper " \
+                        "to set CPU DMA latency which could help prevent " \
+                        "xruns."
+    else:
+        status[check] = False
+        output[check] = "Power management can't be controlled from user " \
+                        "space, /dev/cpu_dma_latency can't be accessed by " \
+                        "the audio group. This prohibits DAW's like Ardour " \
+                        "and Reaper to set CPU DMA latency which could help " \
+                        "prevent xruns. Add https://github.com/Ardour/" \
+                        "ardour/blob/master/tools/udev/99-cpu-dma-latency." \
+                        "rules to /etc/udev/rules.d/ and reboot."
+
+    format_output(check)
+
 
 def main():
     print_version()
@@ -531,6 +525,7 @@ def main():
     max_user_watches_check()
     filesystems_check()
     irq_check()
+    power_management_check()
 
 
 if __name__ == "__main__":
