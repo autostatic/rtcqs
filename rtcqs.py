@@ -485,7 +485,7 @@ def power_management_check():
     check = 'power_management'
     headline[check] = "Power Management"
     stat_data = os.stat('/dev/cpu_dma_latency')
-    file_permissions = oct(stat_data.st_mode)[-3:]
+    file_permissions = int(oct(stat_data.st_mode)[-3:])
     file_gid = stat_data.st_gid
     file_group = grp.getgrgid(file_gid)[0]
 
