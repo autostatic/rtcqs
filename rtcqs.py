@@ -3,14 +3,13 @@
 import os
 import getpass
 import grp
-import glob
 import re
 import gzip
 
 user = getpass.getuser()
 wiki_url = "https://wiki.linuxaudio.org/wiki/system_configuration"
 gui_status = False
-version = "0.4.2"
+version = "0.5.0"
 headline = {}
 kernel = {}
 output = {}
@@ -77,49 +76,6 @@ def audio_group_check():
     else:
         status[check] = True
         output[check] = f"User {user} is in the audio group."
-
-    format_output(check)
-
-
-def background_check():
-    check = 'background_process'
-    headline[check] = "Background Processes"
-    wiki_anchor = \
-        '#disabling_resource-intensive_daemons_services_and_processes'
-    procs = ['powersaved', 'kpowersave']
-    proc_re = '|'.join(procs)
-    proc_compiled_re = re.compile(f'.*({proc_re}).*')
-    procs_list = []
-    procs_list_dirs = [
-        dir for dir in glob.glob(os.path.join('/proc/', '[0-9]*'))]
-    procs_bad_list = []
-
-    for dir in procs_list_dirs:
-        cmdline = f'{dir}/cmdline'
-        try:
-            with open(cmdline, 'r') as f:
-                cmd = f.readline().replace('\x00', ' ').rstrip()
-        except FileNotFoundError:
-            pass
-
-        if cmd != '':
-            procs_list.append(cmd)
-
-    for proc in procs_list:
-        if proc_compiled_re.search(proc):
-            procs_bad_list.append(proc)
-
-    if len(procs_bad_list) > 0:
-        status[check] = False
-        for proc in procs_bad_list:
-            output[check] = "Found resource-intensive " \
-                f"process '{proc}'. Please try stopping and/or disabling " \
-                "this process."
-        print_cli(f"See also: {wiki_url}{wiki_anchor}")
-    else:
-        status[check] = True
-        output[check] = "No resource intensive background " \
-            "processes found."
 
     format_output(check)
 
@@ -198,31 +154,6 @@ def high_res_timers_check():
     else:
         status[check] = True
         output[check] = "High resolution timers are enabled."
-
-    format_output(check)
-
-
-def system_timer_check():
-    check = 'system_timer'
-    headline[check] = "System Timer"
-    wiki_anchor = '#installing_a_real-time_kernel'
-
-    if 'CONFIG_HZ=1000' not in kernel['config'] and \
-            'CONFIG_HIGH_RES_TIMERS=y' not in kernel['config']:
-        status[check] = False
-        output[check] = "CONFIG_HZ is not set at 1000 Hz. Try " \
-            "setting CONFIG_HZ to 1000 and/or enabling " \
-            f"CONFIG_HIGH_RES_TIMERS. See also: {wiki_url}{wiki_anchor}"
-    elif 'CONFIG_HZ=1000' not in kernel['config'] and \
-            'CONFIG_HIGH_RES_TIMERS=y' in kernel['config']:
-        status[check] = True
-        output[check] = "System timer is not 1000 Hz but high " \
-            "resolution timers are enabled."
-    elif 'CONFIG_HZ=1000' in kernel['config'] and \
-            'CONFIG_HIGH_RES_TIMERS=y' in kernel['config']:
-        status[check] = True
-        output[check] = "System timer is set at 1000 Hz and high " \
-            "resolution timers are enabled."
 
     format_output(check)
 
@@ -349,29 +280,6 @@ def swappiness_check():
     format_output(check)
 
 
-def max_user_watches_check():
-    check = 'max_user_watches'
-    headline[check] = "Maximum User Watches"
-    wiki_anchor = "#sysctlconf"
-
-    with open('/proc/sys/fs/inotify/max_user_watches', 'r') as f:
-        max_user_watches = int(f.readline().strip())
-
-    if max_user_watches < 524288:
-        status[check] = False
-        output[check] = f"The max_user_watches setting is set " \
-            f"to {max_user_watches} which might be too low when working " \
-            "with a high number of files that change a lot. Try increasing " \
-            "the setting to at least 524288 or higher. See also " \
-            f"{wiki_url}{wiki_anchor}"
-    else:
-        status[check] = True
-        output[check] = f"max_user_watches has been set to " \
-            f"{max_user_watches} which is sufficient."
-
-    format_output(check)
-
-
 def filesystems_check():
     headline['filesystems'] = "Filesystems"
     wiki_anchor = "#filesystems"
@@ -484,12 +392,8 @@ def irq_check():
 def power_management_check():
     check = 'power_management'
     headline[check] = "Power Management"
-    stat_data = os.stat('/dev/cpu_dma_latency')
-    file_permissions = int(oct(stat_data.st_mode)[-3:])
-    file_gid = stat_data.st_gid
-    file_group = grp.getgrgid(file_gid)[0]
 
-    if file_permissions == 660 and file_group == 'audio':
+    if os.access('/dev/cpu_dma_latency', os.W_OK):
         status[check] = True
         output[check] = "Power management can be controlled from user " \
                         "space. This enables DAW's like Ardour and Reaper " \
@@ -499,8 +403,8 @@ def power_management_check():
         status[check] = False
         output[check] = "Power management can't be controlled from user " \
                         "space, /dev/cpu_dma_latency can't be accessed by " \
-                        "the audio group. This prohibits DAW's like Ardour " \
-                        "and Reaper to set CPU DMA latency which could help " \
+                        "your user. This prohibits DAW's like Ardour and " \
+                        "Reaper to set CPU DMA latency which could help " \
                         "prevent xruns. Add https://github.com/Ardour/" \
                         "ardour/blob/master/tools/udev/99-cpu-dma-latency." \
                         "rules to /etc/udev/rules.d/ and reboot."
@@ -512,17 +416,14 @@ def main():
     print_version()
     root_check()
     audio_group_check()
-    background_check()
     governor_check()
     kernel_config_check()
     high_res_timers_check()
-    system_timer_check()
     tickless_check()
     preempt_rt_check()
     mitigations_check()
     rt_prio_check()
     swappiness_check()
-    max_user_watches_check()
     filesystems_check()
     irq_check()
     power_management_check()
