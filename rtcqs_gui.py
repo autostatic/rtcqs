@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 
-import PySimpleGUIQt as sg
+import PySimpleGUI as sg
 import rtcqs
 import resources as res
 
 rtcqs.gui_status = True
 version = rtcqs.version
 element_vars = {}
+element_vars['check_keys'] = []
+tab_group_list = []
 
 
 def run_analysis():
@@ -16,6 +18,7 @@ def run_analysis():
         print(f'rtcqs exited with error {err=}, {type(err)=}')
 
     for check in rtcqs.output:
+        headline_key = f'{check}_headline'
         img_key = f'{check}_img'
         output_key = f'{check}_output'
         tab_status = f'{check}_status'
@@ -27,60 +30,68 @@ def run_analysis():
             element_vars[img_key] = res.warning_img
             element_vars[tab_status] = '✘'
 
+        element_vars[headline_key] = rtcqs.headline[check]
         element_vars[output_key] = rtcqs.output[check]
+
+        element_vars['check_keys'].append(check)
 
 
 def create_tab(tab_name, check):
     tab_layout = [sg.Tab(f"{element_vars[f'{check}_status']}{tab_name}", [[
-        sg.Image(data_base64=element_vars[f'{check}_img'],
+        sg.Image(source=element_vars[f'{check}_img'],
                  key=f'{check}_img'),
         sg.Multiline(default_text=element_vars[f'{check}_output'],
-                     size=(80, 3.5),
+                     size=(90, 4),
                      key=f'{check}_output',
                      disabled=True,
                      background_color='white',
-                     text_color='black')]],
-            background_color='#FBFBFB', key=f'{check}_tab')]
+                     text_color='black',
+                     no_scrollbar=True)]],
+            background_color='#D9D9D9',
+            key=f'{check}_tab')]
 
     return tab_layout
 
 
-def create_gui():
-    sg.theme('SystemDefaultForReal')
+def create_tab_group():
+    tab_count = len(element_vars['check_keys'])
+    tab_group_count = 0
+    tab_row_count = 0
+    tab_group_layout = []
 
-    about_window = False
+    for tab in range(tab_count):
+        if tab % 5 == 0:
+            tab_group_count += 1
+            tab_row_count += 5
+            tab_group_layout.append(
+                [sg.TabGroup([
+                 create_tab(
+                    f"{element_vars[f'{check}_headline']}",
+                    check) for check in element_vars['check_keys']
+                 ][tab:tab_row_count],
+                    key=f'tab_group{tab_group_count}',
+                    pad=(None, (0, 10)))]
+            )
 
+    return tab_group_layout
+
+
+def make_analysis():
     layout_analysis = [
-        [sg.TabGroup([
-            create_tab(' Root User', 'root'),
-            create_tab(' Audio Group', 'audio_group'),
-            create_tab(' Background Processes', 'background_process'),
-            create_tab(' CPU Frequency Scaling', 'governor'),
-            create_tab(' Kernel Configuration', 'kernel_config'),
-            ], key='tab_group1')],
-        [sg.TabGroup([
-            create_tab(' High Resolution Timers', 'high_res_timers'),
-            create_tab(' System Timer', 'system_timer'),
-            create_tab(' Tickless Kernel', 'tickless'),
-            create_tab(' Real-Time Kernel', 'preempt_rt'),
-            create_tab(' Mitigations', 'mitigations'),
-            ], key='tab_group2')],
-        [sg.TabGroup([
-            create_tab(' Real-Time Priorities', 'rt_prio'),
-            create_tab(' Swappiness', 'swappiness'),
-            create_tab(' Max User Watches', 'max_user_watches'),
-            create_tab(' Filesystems', 'filesystems'),
-            create_tab(' IRQs', 'irqs'),
-            ], key='tab_group3')],
-        [sg.TabGroup([
-            create_tab(' Power Management', 'power_management'),
-            ], key='tab_group4')],
-        [sg.Button(button_text='About', size=(25, 1), pad=((0, 0), (0, 0))),
-         sg.Stretch(), sg.Cancel(size=(25, 1), pad=((0, 0), (0, 0)))]]
+        create_tab_group(),
+        [sg.Button(button_text='About', size=(25, 1), pad=((5, 0), (0, 0))),
+         sg.Stretch(), sg.Cancel(size=(25, 1), pad=((0, 5), (0, 0)))]]
 
+    window_analysis = sg.Window(
+        'rtcqs', layout_analysis, icon=res.icon_data, finalize=True)
+
+    return window_analysis
+
+
+def make_about():
     layout_about = [
         [sg.Column([
-            [sg.Stretch(), sg.Image(data_base64=res.logo),
+            [sg.Stretch(), sg.Image(source=res.logo),
              sg.Stretch()],
             [sg.Stretch(),
              sg.Text(f'rtcqs - version {version}',
@@ -89,33 +100,35 @@ def create_gui():
             [sg.Stretch(),
              sg.Text('rtcqs, pronounced arteeseeks, is a Python '
                      'port of the realtimeconfigquickscan project.'),
-             sg.Stretch()]], background_color='white')],
+             sg.Stretch()]])],
         [sg.Stretch(), sg.OK(size=(13, 1), pad=((0, 0), (3, 0))),
          sg.Stretch()]]
 
-    window_analysis = sg.Window(
-        'rtcqs', layout_analysis, icon=res.icon_data)
-
     window_about = sg.Window(
-        'rtcqs', layout_about, icon=res.icon_data, disable_close=True)
+        'rtcqs', layout_about,
+        icon=res.icon_data,
+        finalize=True,
+        disable_close=True)
+
+    return window_about
+
+
+def create_gui():
+    sg.theme('SystemDefaultForReal')
+
+    make_analysis()
 
     while True:
-        event, values = window_analysis.read()
+        window, event, values = sg.read_all_windows()
 
         if event in (sg.WIN_CLOSED, 'Cancel'):
             break
-        elif event == 'About':
-            about_window = True
-            window_about.un_hide()
-            choice, _ = window_about.read(close=True)
 
-            if choice == 'OK':
-                window_about.hide()
+        if event == 'About':
+            window_about = make_about()
 
-    if about_window:
-        window_about.close()
-
-    window_analysis.close()
+        if event == 'OK':
+            window_about.close()
 
 
 def main():
