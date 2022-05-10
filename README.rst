@@ -132,29 +132,21 @@ window which displays the version and a short description.
 .. figure:: https://codeberg.org/attachments/dd6de9ba-670d-4aa1-9b3c-b7de876899db
    :align: center
 
-   ..
-
    *rtcqs main window (tkinter version)*
 
 
 .. figure:: https://codeberg.org/attachments/5345ce8a-773a-448a-9bac-a2fe5fd44b94
    :align: center
 
-   ..
-
    *rtcqs main window (Qt version)*
 
 .. figure:: https://codeberg.org/attachments/9d0fe041-1209-4227-a603-dfed4ef10ba1
    :align: center
 
-   ..
-
    *rtcqs about window (tkinter version)*
 
 .. figure:: https://codeberg.org/attachments/4dc26f40-76c9-4738-bfff-c57457f7f9bb
    :align: center
-
-   ..
 
    *rtcqs about window (Qt version)*
 
