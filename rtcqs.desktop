@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=rtcqs
+Comment=Linux audio performance analyzer
+Exec=rtcqs
+Icon=rtcqs
+Terminal=false
+Categories=System;Utility;
+StartupNotify=true
