@@ -90,7 +90,7 @@ and install PySimpleGUI or PySimpleGUIQt in there.
 For the tkinter GUI use the following commands.
 ::
 
-  .python3 -m venv venv &&
+  python3 -m venv venv &&
   . venv/bin/activate &&
   pip install --upgrade pip setuptools PySimpleGUI
 
