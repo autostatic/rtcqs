@@ -52,7 +52,7 @@ Then cd into the newly created directory.
 And run the script.
 ::
 
- ./rtcqs.py
+ ./src/rtcqs/rtcqs.py
 
 GUI
 ---
@@ -101,21 +101,22 @@ For the Qt GUI use the following commands.
   . venv/bin/activate &&
   pip install --upgrade pip setuptools PySimpleGUIQt
 
-You can now run the GUI with either ``./rtcqs_gui.py`` for the tkinter GUI or 
-``./rtcqs_qt_gui.py`` for the Qt GUI. Next time you'd like to run the GUI 
-load the virtual environment again and spin up the GUI.
+You can now run the GUI with either ``./src/rtcqs/rtcqs_gui.py`` for the 
+tkinter GUI or ``./src/rtcqs/rtcqs_qt_gui.py`` for the Qt GUI. Next time 
+you'd like to run the GUI load the virtual environment again and spin up the 
+GUI.
 
 For the tkinter GUI:
 ::
 
   . venv/bin/activate
-  ./rtcqs_gui.py
+  ./src/rtcqs/rtcqs_gui.py
 
 For the Qt GUI:
 ::
 
   . venv/bin/activate
-  ./rtcqs_qt_gui.py
+  ./src/rtcqs/rtcqs_qt_gui.py
 
 Overview
 ````````
@@ -152,8 +153,6 @@ window which displays the version and a short description.
 Future plans
 ------------
 
-- Make the project more dynamic and modular so it gets easier to add new 
-  features
 - Extend filesystem check
 - Disk scheduler check
 
