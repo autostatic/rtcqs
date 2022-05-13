@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 import PySimpleGUI as sg
-import rtcqs
-import resources as res
+import rtcqs.rtcqs as rtcqs
+import rtcqs.resources as res
 
 rtcqs.gui_status = True
 version = rtcqs.version
