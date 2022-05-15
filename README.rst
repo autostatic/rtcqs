@@ -61,7 +61,8 @@ rtcqs comes with two GUI's, a basic and light tkinter GUI and a polished and
 heavy Qt GUI. To run the GUI first install the PySimpleGUI (tkinter) or 
 PySimpleGUIQt (Qt) module either in your home directory or in a virtual 
 environment. Bear in mind that the Qt version will pull in a lot of 
-dependencies.
+dependencies and is in a beta state. Hence I do not recommend using the Qt 
+version and installation of the Qt GUI is not covered in this manual.
 
 Home directory
 ``````````````
@@ -70,15 +71,10 @@ Make sure ``pip`` is installed, on Ubuntu this would be the ``python3-pip``
 package. For the tkinter GUI you will also need ``python3-tk``. Then install 
 PySimpleGUI or PySimpleGUIQt for your user.
 
-For the tkinter GUI you will need the PySimpleGUI module.
+For the tkinter GUI you will need rtcqs and the PySimpleGUI module.
 ::
 
-  pip install PySimpleGUI
-
-For the Qt GUI you will need the PySimpleGUIQt module.
-::
-
-  pip install PySimpleGUIQt
+  pip install rtcqs PySimpleGUI
 
 Virtual Environment
 ```````````````````
@@ -92,31 +88,15 @@ For the tkinter GUI use the following commands.
 
   python3 -m venv venv &&
   . venv/bin/activate &&
-  pip install --upgrade pip setuptools PySimpleGUI
+  pip install --upgrade pip setuptools rtcqs PySimpleGUI
 
-For the Qt GUI use the following commands.
-::
-
-  python3 -m venv venv &&
-  . venv/bin/activate &&
-  pip install --upgrade pip setuptools PySimpleGUIQt
-
-You can now run the GUI with either ``./src/rtcqs/rtcqs_gui.py`` for the 
-tkinter GUI or ``./src/rtcqs/rtcqs_qt_gui.py`` for the Qt GUI. Next time 
+You can now run the GUI with ``rtcqs_gui``. Next time 
 you'd like to run the GUI load the virtual environment again and spin up the 
 GUI.
-
-For the tkinter GUI:
 ::
 
   . venv/bin/activate
-  ./src/rtcqs/rtcqs_gui.py
-
-For the Qt GUI:
-::
-
-  . venv/bin/activate
-  ./src/rtcqs/rtcqs_qt_gui.py
+  rtcqs_gui
 
 Overview
 ````````
@@ -130,7 +110,7 @@ which checks have issues.
 Clicking 'Cancel' will close rtcqs. Clicking 'About' will bring up a popup 
 window which displays the version and a short description.
 
-.. figure:: https://codeberg.org/attachments/dd6de9ba-670d-4aa1-9b3c-b7de876899db
+.. figure:: https://codeberg.org/attachments/5092d94a-2a06-4be1-b04e-ca61ae6ed732
    :align: center
 
    *rtcqs main window (tkinter version)*
@@ -140,7 +120,7 @@ window which displays the version and a short description.
 
    *rtcqs main window (Qt version)*
 
-.. figure:: https://codeberg.org/attachments/9d0fe041-1209-4227-a603-dfed4ef10ba1
+.. figure:: https://codeberg.org/attachments/c0f72b82-470c-4f90-86d5-736226a146ed
    :align: center
 
    *rtcqs about window (tkinter version)*
