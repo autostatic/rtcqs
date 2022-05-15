@@ -31,71 +31,46 @@ Additional features:
 - Spectre/Meltdown mitigations check
 - Basic IRQ check of sound cards and USB ports
 - Power management check
-- Qt GUI
 - tkinter GUI
+- Qt GUI (beta)
 
-Usage
------
-
-When writing this script I could rely on Python's built-in functionality so 
-no extra modules are needed, just Python 3. To run the script first clone 
-this repository.
-::
-
- git clone https://codeberg.org/rtcqs/rtcqs.git
-
-Then cd into the newly created directory.
-::
-
-  cd rtcqs
-
-And run the script.
-::
-
- ./src/rtcqs/rtcqs.py
-
-GUI
----
-
-rtcqs comes with two GUI's, a basic and light tkinter GUI and a polished and 
-heavy Qt GUI. To run the GUI first install the PySimpleGUI (tkinter) or 
-PySimpleGUIQt (Qt) module either in your home directory or in a virtual 
-environment. Bear in mind that the Qt version will pull in a lot of 
-dependencies and is in a beta state. Hence I do not recommend using the Qt 
-version and installation of the Qt GUI is not covered in this manual.
+Installation
+------------
 
 Home directory
 ``````````````
 
 Make sure ``pip`` is installed, on Ubuntu this would be the ``python3-pip`` 
-package. For the tkinter GUI you will also need ``python3-tk``. Then install 
-PySimpleGUI or PySimpleGUIQt for your user.
-
-For the tkinter GUI you will need rtcqs and the PySimpleGUI module.
+package. Now you can install rtcqs with the following command.
 ::
 
-  pip install rtcqs PySimpleGUI
+  pip install --upgrade rtcqs
+
+You can now run rtcqs by simply running ``rtcqs`` in a terminal. The GUI can 
+be run with with ``rtcqs_gui``.
 
 Virtual Environment
 ```````````````````
 
 Make sure the virtual environment module is installed, on Ubuntu this would 
-be ``python3-venv``. Then create a virtual environment in the rtcqs directory 
-and install PySimpleGUI or PySimpleGUIQt in there.
-
-For the tkinter GUI use the following commands.
+be ``python3-venv``. Then create a virtual environment in a directory of 
+of choice and install rtcqs in there.
 ::
 
+  mkdir -p ~/path/to/rtcqs
+  cd ~/path/to/rtcqs
   python3 -m venv venv &&
   . venv/bin/activate &&
-  pip install --upgrade pip setuptools rtcqs PySimpleGUI
+  pip install --upgrade rtcqs
 
-You can now run the GUI with ``rtcqs_gui``. Next time 
-you'd like to run the GUI load the virtual environment again and spin up the 
-GUI.
+You can now run rtcqs by simply running ``rtcqs`` in a terminal. The GUI can 
+be run with with ``rtcqs_gui``. Next time you'd like to run the script or the 
+GUI load the virtual environment again and run either ``rtcqs`` or 
+``rtcqs_gui``.
 ::
 
   . venv/bin/activate
+  rtcqs
   rtcqs_gui
 
 Overview
@@ -135,7 +110,6 @@ Future plans
 
 - Extend filesystem check
 - Disk scheduler check
-
 
 Contact
 -------
