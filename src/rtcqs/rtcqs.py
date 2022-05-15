@@ -406,8 +406,8 @@ def power_management_check():
                         "space, the device node /dev/cpu_dma_latency can't " \
                         "be accessed by your user. This prohibits DAW's " \
                         "like Ardour and Reaper to set CPU DMA latency " \
-                        "which could help prevent xruns. For enabling access " \
-                        f"see {wiki_url}{wiki_anchor}"
+                        "which could help prevent xruns. For enabling " \
+                        f"access see {wiki_url}{wiki_anchor}"
 
     format_output(check)
 
