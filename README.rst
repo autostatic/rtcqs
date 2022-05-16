@@ -36,6 +36,10 @@ Additional features:
 
 Installation
 ------------
+GUI
+```
+If you want to use the GUI you will have to install the ``python3-tk`` 
+package or similar for your distro.
 
 Home directory
 ``````````````
