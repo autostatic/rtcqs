@@ -2,7 +2,7 @@
 Type=Application
 Name=rtcqs
 Comment=Linux audio performance analyzer
-Exec=rtcqs
+Exec=rtcqs_gui
 Icon=rtcqs
 Terminal=false
 Categories=System;Utility;
