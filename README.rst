@@ -10,7 +10,7 @@ bottlenecks that could have a negative impact on the performance of your
 system when working with Linux audio. It is heavily inspired by raboof's 
 excellent `realtimeconfigquickscan 
 <https://github.com/raboof/realtimeconfigquickscan>`_
-script in Python.
+script.
 
 Features
 --------
@@ -41,7 +41,8 @@ Home directory
 ``````````````
 
 Make sure ``pip`` is installed, on Ubuntu this would be the ``python3-pip`` 
-package. Now you can install rtcqs with the following command.
+package. With ``pip`` installed you can install rtcqs with the following 
+command.
 ::
 
   pip install --upgrade rtcqs
@@ -54,7 +55,7 @@ Virtual Environment
 
 Make sure the virtual environment module is installed, on Ubuntu this would 
 be ``python3-venv``. Then create a virtual environment in a directory of 
-of choice and install rtcqs in there.
+choice and install rtcqs in there.
 ::
 
   mkdir -p ~/path/to/rtcqs
@@ -90,20 +91,10 @@ window which displays the version and a short description.
 
    *rtcqs main window (tkinter version)*
 
-.. figure:: https://codeberg.org/attachments/5345ce8a-773a-448a-9bac-a2fe5fd44b94
-   :align: center
-
-   *rtcqs main window (Qt version)*
-
 .. figure:: https://codeberg.org/attachments/c0f72b82-470c-4f90-86d5-736226a146ed
    :align: center
 
    *rtcqs about window (tkinter version)*
-
-.. figure:: https://codeberg.org/attachments/4dc26f40-76c9-4738-bfff-c57457f7f9bb
-   :align: center
-
-   *rtcqs about window (Qt version)*
 
 Future plans
 ------------
