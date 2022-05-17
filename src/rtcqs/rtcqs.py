@@ -366,7 +366,7 @@ def irq_check():
                     f"{irq} does not share its IRQ."
 
     print_cli(headline['irqs'])
-    print_cli("=====")
+    print_cli("====")
 
     if len(good_irq_list) > 0:
         status['irqs'] = True
