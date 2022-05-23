@@ -9,7 +9,7 @@ import gzip
 user = getpass.getuser()
 wiki_url = "https://wiki.linuxaudio.org/wiki/system_configuration"
 gui_status = False
-version = "0.5.3"
+version = "0.5.4"
 headline = {}
 kernel = {}
 output = {}
@@ -61,21 +61,23 @@ def root_check():
 
 def audio_group_check():
     check = 'audio_group'
-    headline[check] = "Audio Group"
+    headline[check] = "Audio/Realtime Group"
     wiki_anchor = '#audio_group'
+    audio_group = [g.gr_name for g in grp.getgrall()
+                   if g.gr_name in ["audio", "realtime"]][0]
     gid = os.getgid()
     gids = os.getgrouplist(user, gid)
     groups = [grp.getgrgid(gid)[0] for gid in gids]
 
-    if 'audio' not in groups:
+    if audio_group not in groups:
         status[check] = False
-        output[check] = f"User {user} is currently not in the audio " \
-            "group. Add yourself to the audio group with 'sudo usermod -a " \
-            f"-G audio {user}' and log in again. See also " \
+        output[check] = f"User {user} is currently not in the {audio_group} " \
+            f"group. Add yourself to the {audio_group} group with 'sudo " \
+            f"usermod -a -G {audio_group} {user} and log in again. See also " \
             f"{wiki_url}{wiki_anchor}"
     else:
         status[check] = True
-        output[check] = f"User {user} is in the audio group."
+        output[check] = f"User {user} is in the {audio_group} group."
 
     format_output(check)
 
