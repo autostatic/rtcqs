@@ -104,14 +104,14 @@ def governor_check():
 
     if bad_governor > 0:
         status[check] = False
-        output[check] = "The scaling governor of one or more CPU's is " \
+        output[check] = "The scaling governor of one or more CPUs is " \
             "not set to 'performance'. You can set the scaling governor to " \
             "'performance' with 'cpupower frequency-set -g performance' " \
             "or 'cpufreq-set -r -g performance' (Debian/Ubuntu). See " \
             f"also {wiki_url}{wiki_anchor}"
     else:
         status[check] = True
-        output[check] = "The scaling governor of all CPU's is set at " \
+        output[check] = "The scaling governor of all CPUs is set at " \
             "performance."
 
     format_output(check)
@@ -200,7 +200,7 @@ def preempt_rt_check():
     elif threadirqs:
         status[check] = True
         output[check] = f"Kernel {kernel['release']} is using " \
-            "threaded IRQ's."
+            "threaded IRQs."
     elif preempt:
         status[check] = True
         output[check] = f"Kernel {kernel['release']} is a real-time " \
@@ -399,14 +399,14 @@ def power_management_check():
     if os.access('/dev/cpu_dma_latency', os.W_OK):
         status[check] = True
         output[check] = "Power management can be controlled from user " \
-                        "space. This enables DAW's like Ardour and Reaper " \
+                        "space. This enables DAWs like Ardour and Reaper " \
                         "to set CPU DMA latency which could help prevent " \
                         "xruns."
     else:
         status[check] = False
         output[check] = "Power management can't be controlled from user " \
                         "space, the device node /dev/cpu_dma_latency can't " \
-                        "be accessed by your user. This prohibits DAW's " \
+                        "be accessed by your user. This prohibits DAWs " \
                         "like Ardour and Reaper to set CPU DMA latency " \
                         "which could help prevent xruns. For enabling " \
                         f"access see {wiki_url}{wiki_anchor}"
