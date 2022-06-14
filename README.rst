@@ -47,6 +47,7 @@ Home directory
 Make sure ``pip`` is installed, on Ubuntu this would be the ``python3-pip`` 
 package. With ``pip`` installed you can install rtcqs with the following 
 command.
+::
 
   pip install --upgrade rtcqs
 
@@ -59,6 +60,7 @@ Virtual Environment
 Make sure the virtual environment module is installed, on Ubuntu this would 
 be ``python3-venv``. Then create a virtual environment in a directory of 
 choice and install rtcqs in there.
+::
 
   mkdir -p ~/path/to/rtcqs
   cd ~/path/to/rtcqs
@@ -70,6 +72,7 @@ You can now run rtcqs by simply running ``rtcqs`` in a terminal. The GUI can
 be run with with ``rtcqs_gui``. Next time you'd like to run the script or the 
 GUI load the virtual environment again and run either ``rtcqs`` or 
 ``rtcqs_gui``.
+::
 
   . venv/bin/activate
   rtcqs
