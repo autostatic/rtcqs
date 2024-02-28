@@ -208,7 +208,8 @@ def preempt_rt_check():
         threadirqs = True
 
     if "CONFIG_PREEMPT_RT=y" in kernel["config"] or \
-            "CONFIG_PREEMPT_RT_FULL=y" in kernel["config"]:
+            "CONFIG_PREEMPT_RT_FULL=y" in kernel["config"] or \
+            "preempt=full" in kernel["cmdline"]:
         preempt = True
 
     if not threadirqs and not preempt:
