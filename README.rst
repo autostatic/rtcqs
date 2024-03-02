@@ -40,25 +40,12 @@ GUI
 If you want to use the GUI you will have to install the ``python3-tk`` 
 package or similar for your distro.
 
-Home directory
-``````````````
-
-Make sure ``pip`` is installed, on Ubuntu this would be the ``python3-pip`` 
-package. With ``pip`` installed you can install rtcqs with the following 
-command.
-::
-
-  pip install --upgrade rtcqs
-
-You can now run rtcqs by simply running ``rtcqs`` in a terminal. The GUI can 
-be run with with ``rtcqs_gui``.
-
 Virtual Environment
 ```````````````````
-
-Make sure the virtual environment module is installed, on Ubuntu this would 
-be ``python3-venv``. Then create a virtual environment in a directory of 
-choice and install rtcqs in there.
+Make sure the ``pip`` and the Python virtual environment module packages are
+installed, on Ubuntu these would be ``python3-pip`` and ``python3-venv``. Then
+create a virtual environment in a directory of choice and install rtcqs in
+there.
 ::
 
   mkdir -p ~/path/to/rtcqs
@@ -68,14 +55,28 @@ choice and install rtcqs in there.
   pip install --upgrade rtcqs
 
 You can now run rtcqs by simply running ``rtcqs`` in a terminal. The GUI can 
-be run with with ``rtcqs_gui``. Next time you'd like to run the script or the 
-GUI load the virtual environment again and run either ``rtcqs`` or 
-``rtcqs_gui``.
+be run with ``rtcqs_gui``. Next time you'd like to run the script or the GUI
+load the virtual environment again and run either ``rtcqs`` or ``rtcqs_gui``.
 ::
 
   . venv/bin/activate
   rtcqs
   rtcqs_gui
+
+Editable Installation
+`````````````````````
+It is also possible to use a so-called "editable installation". This allows you
+to run the commands directly, without having to load the virtual environment.
+::
+
+  mkdir -p ~/path/to/rtcqs
+  cd ~/path/to/rtcqs
+  git clone https://codeberg.org/rtcqs/rtcqs.git .
+  python3 -m venv venv
+  venv/bin/pip install -e .
+
+You can now run rtcqs by running ``~/path/to/rtcqs/venv/bin/rtcqs`` in a
+terminal. The GUI can be run with ``~/path/to/rtcqs/venv/bin/rtcqs_gui``.
 
 Overview
 ````````
