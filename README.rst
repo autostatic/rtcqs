@@ -32,7 +32,6 @@ Additional features:
 - Basic IRQ check of sound cards and USB ports
 - Power management check
 - tkinter GUI
-- Qt GUI (beta)
 
 Installation
 ------------
@@ -90,12 +89,14 @@ which checks have issues.
 Clicking 'Cancel' will close rtcqs. Clicking 'About' will bring up a popup 
 window which displays the version and a short description.
 
-.. figure:: https://codeberg.org/attachments/5092d94a-2a06-4be1-b04e-ca61ae6ed732
+.. figure::
+      https://codeberg.org/attachments/5092d94a-2a06-4be1-b04e-ca61ae6ed732
    :align: center
 
    *rtcqs main window (tkinter version)*
 
-.. figure:: https://codeberg.org/attachments/c0f72b82-470c-4f90-86d5-736226a146ed
+.. figure::
+      https://codeberg.org/attachments/c0f72b82-470c-4f90-86d5-736226a146ed
    :align: center
 
    *rtcqs about window (tkinter version)*
@@ -103,8 +104,11 @@ window which displays the version and a short description.
 Future plans
 ------------
 
-- Extend filesystem check
-- Disk scheduler check
+- Disk scheduler check (first asses what impact different schedulers have on
+  performance)
+- Improve swappiness check (get amount of RAM and work with that)
+- Ditch PySimpleGUI which is not open source anymore and move to pygubu or
+  even popsicle (how audio would that be)
 
 Contact
 -------
