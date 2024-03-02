@@ -686,6 +686,10 @@ class Rtcqs:
         self.power_management_check()
 
 
-if __name__ == "__main__":
+def main():
     app = Rtcqs()
     app.main()
+
+
+if __name__ == "__main__":
+    main()

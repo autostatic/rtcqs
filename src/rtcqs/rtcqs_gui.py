@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 
 import PySimpleGUI as sg
-from rtcqs_class import Rtcqs, Resources
+from rtcqs import rtcqs
 
 
 class RtcqsGUI:
     def __init__(self):
-        self.rtcqs = Rtcqs()
-        self.res = Resources()
+        self.rtcqs = rtcqs.Rtcqs()
+        self.res = rtcqs.Resources()
         self.rtcqs.gui_status = True
         self.version = self.rtcqs.version
         self.element_vars = {}
@@ -133,6 +133,10 @@ class RtcqsGUI:
         self.create_gui()
 
 
-if __name__ == "__main__":
+def main():
     app = RtcqsGUI()
     app.main()
+
+
+if __name__ == "__main__":
+    main()
