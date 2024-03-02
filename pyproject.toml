@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "rtcqs"
-version = "0.5.5"
+version = "0.6.0"
 description = "Linux audio performance analyzer"
 readme = {file = "README.rst", content-type = "text/x-rst"}
 authors = [{ name = "Jeremy Jongepier", email = "jeremy@autostatic.com" }]
@@ -28,7 +28,4 @@ Homepage = "https://codeberg.org/rtcqs/rtcqs"
 
 [project.scripts]
 rtcqs = "rtcqs.rtcqs:main"
-rtcqs_gui = "rtcqs:rtcqs_gui.main"
-
-[tool.setuptools.packages.find]
-where = ["src"]
+rtcqs_gui = "rtcqs.rtcqs_gui:main"
