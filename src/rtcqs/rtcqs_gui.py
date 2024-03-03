@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 
 import PySimpleGUI as sg
-from rtcqs import rtcqs
+from rtcqs import Rtcqs, Resources
 
 
 class RtcqsGUI:
     def __init__(self):
-        self.rtcqs = rtcqs.Rtcqs()
-        self.res = rtcqs.Resources()
+        self.rtcqs = Rtcqs()
+        self.res = Resources()
         self.rtcqs.gui_status = True
         self.version = self.rtcqs.version
         self.element_vars = {}
@@ -39,18 +39,19 @@ class RtcqsGUI:
             self.element_vars["check_keys"].append(check)
 
     def create_tab(self, tab_name, check):
-        tab_layout = [sg.Tab(f"{self.element_vars[f'{check}_status']}{tab_name}", [[
-            sg.Image(source=self.element_vars[f"{check}_img"],
-                     key=f"{check}_img"),
-            sg.Multiline(default_text=self.element_vars[f"{check}_output"],
-                         size=(90, 4),
-                         key=f"{check}_output",
-                         disabled=True,
-                         background_color="white",
-                         text_color="black",
-                         no_scrollbar=True)]],
-                background_color="#D9D9D9",
-                key=f"{check}_tab")]
+        tab_layout = [
+            sg.Tab(f"{self.element_vars[f'{check}_status']}{tab_name}", [[
+                sg.Image(source=self.element_vars[f"{check}_img"],
+                         key=f"{check}_img"),
+                sg.Multiline(default_text=self.element_vars[f"{check}_output"],
+                             size=(90, 4),
+                             key=f"{check}_output",
+                             disabled=True,
+                             background_color="white",
+                             text_color="black",
+                             no_scrollbar=True)]],
+                   background_color="#D9D9D9",
+                   key=f"{check}_tab")]
 
         return tab_layout
 
@@ -79,7 +80,8 @@ class RtcqsGUI:
     def make_analysis(self):
         layout_analysis = [
             self.create_tab_group(),
-            [sg.Button(button_text="About", size=(25, 1), pad=((5, 0), (0, 0))),
+            [sg.Button(
+                button_text="About", size=(25, 1), pad=((5, 0), (0, 0))),
              sg.Stretch(), sg.Cancel(size=(25, 1), pad=((0, 5), (0, 0)))]]
 
         window_analysis = sg.Window(
