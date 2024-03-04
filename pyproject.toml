@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "rtcqs"
-version = "0.6.1"
+version = "0.6.2"
 description = "Linux audio performance analyzer"
 readme = {file = "README.rst", content-type = "text/x-rst"}
 authors = [{ name = "Jeremy Jongepier", email = "jeremy@autostatic.com" }]

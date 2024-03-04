@@ -12,7 +12,7 @@ class Rtcqs:
         self.user = getpass.getuser()
         self.wiki_url = "https://wiki.linuxaudio.org/wiki/system_configuration"
         self.gui_status = False
-        self.version = "0.6.0"
+        self.version = "0.6.2"
         self.headline = {}
         self.kernel = {}
         self.output = {}
