@@ -94,13 +94,13 @@ Clicking 'Cancel' will close rtcqs. Clicking 'About' will bring up a popup
 window which displays the version and a short description.
 
 .. figure::
-      https://codeberg.org/attachments/5092d94a-2a06-4be1-b04e-ca61ae6ed732
+      https://codeberg.org/attachments/9aa45bad-30d2-4775-b191-05438c7cfa94
    :align: center
 
    *rtcqs main window (tkinter version)*
 
 .. figure::
-      https://codeberg.org/attachments/c0f72b82-470c-4f90-86d5-736226a146ed
+      https://codeberg.org/attachments/dcaffb27-4b53-4834-ab29-66726d4de11b
    :align: center
 
    *rtcqs about window (tkinter version)*
