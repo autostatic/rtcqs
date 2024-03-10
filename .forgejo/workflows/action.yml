@@ -30,7 +30,7 @@ jobs:
           dpkg-reconfigure -f noninteractive tzdata
       - run: |
           python3 -m venv venv && \
-          venv/bin/pip install --upgrade pyinstaller && \
+          venv/bin/pip install --upgrade pysimplegui pyinstaller && \
           venv/bin/pyinstaller --onefile src/rtcqs/rtcqs.py && \
           venv/bin/pyinstaller --onefile --windowed src/rtcqs/rtcqs_gui.py
         
