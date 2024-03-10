@@ -5,7 +5,7 @@ description: Build and release rtcqs
 on: [push]
 
 jobs:
-  release-rtcqs:
+  build-rtcqs:
     runs-on: docker
     container:
       image: node:20-bookworm
@@ -36,3 +36,7 @@ jobs:
         with:
           name: rtcqs_gui
           path: dist/rtcqs_gui
+      - uses: actions/forgejo-release@v1
+        with:
+	  direction: upload
+          release-dir: dist/
