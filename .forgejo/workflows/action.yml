@@ -4,10 +4,6 @@ description: Build and release rtcqs
 
 on: [push]
 
-env:
-  WORKDIR: /home/forgejo/rtcqs
-  PROJECT_NAME: rtcqs
-  
 jobs:
   release-rtcqs:
     runs-on: docker
@@ -35,6 +31,6 @@ jobs:
       - uses: actions/forgejo-release@v1
         with:
           direction: upload
-          url: https://codeberg.org
+          url: https://codeberg.org/rtcqs/rtcqs
           token: ${{ secrets.CODEBERG_TOKEN }}
           release-dir: dist/
