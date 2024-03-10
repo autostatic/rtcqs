@@ -1,6 +1,35 @@
-on: [push]
+name: build-rtcqs
+
+description: Build and release rtcqs
+
+on:
+  release:
+    publish:
+  workflow_dispatch:
+
+env:
+  WORKDIR: /home/forgejo
+  PROJECT_NAME: rtcqs
+  
 jobs:
-  test:
+  build-rtcqs:
     runs-on: docker
     steps:
-      - run: echo "This is a test!"
+      - uses: actions/checkout@v3
+      - run: docker build -t build-rtcqs ../resources/
+
+  release-rtcqs:
+    runs-on: docker
+    steps:
+on: [tag]
+jobs:
+  upload-release:
+    runs-on: docker
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/forgejo-release@v1
+        with:
+          direction: upload
+          url: https://codeberg.org
+        release-dir: dist/
+
