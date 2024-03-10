@@ -28,9 +28,3 @@ jobs:
           venv/bin/pip install --upgrade pysimplegui==4.60.5 pyinstaller && \
           venv/bin/pyinstaller --onefile src/rtcqs/rtcqs.py && \
           venv/bin/pyinstaller --onefile --windowed src/rtcqs/rtcqs_gui.py
-      - uses: actions/forgejo-release@v1
-        with:
-          direction: upload
-          url: https://codeberg.org/rtcqs/rtcqs
-          token: ${{ secrets.CODEBERG_TOKEN }}
-          release-dir: dist/
