@@ -9,11 +9,10 @@ env:
   PROJECT_NAME: rtcqs
   
 jobs:
-  build-rtcqs:
+  release-rtcqs:
     runs-on: docker
     container:
       image: node:20-bookworm
-      options: "--workdir ${{ env.WORKDIR }}"
     steps:
       - uses: actions/checkout@v3
       - run: |
@@ -30,19 +29,12 @@ jobs:
           dpkg-reconfigure -f noninteractive tzdata
       - run: |
           python3 -m venv venv && \
-          venv/bin/pip install --upgrade pysimplegui pyinstaller && \
+          venv/bin/pip install --upgrade pysimplegui==4.60.5 pyinstaller && \
           venv/bin/pyinstaller --onefile src/rtcqs/rtcqs.py && \
           venv/bin/pyinstaller --onefile --windowed src/rtcqs/rtcqs_gui.py
-        
-
-  release-rtcqs:
-    runs-on: docker
-    steps:
-      - uses: actions/checkout@v3
       - uses: actions/forgejo-release@v1
         with:
           direction: upload
           url: https://codeberg.org
           token: ${{ secrets.CODEBERG_TOKEN }}
           release-dir: dist/
-
