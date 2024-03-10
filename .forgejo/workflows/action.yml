@@ -13,7 +13,7 @@ jobs:
     runs-on: docker
     container:
       image: node:20-bookworm
-      options: "--name build-rtcqs"
+      options: "--workdir $WORKDIR"
     steps:
       - uses: actions/checkout@v3
       - run: |
