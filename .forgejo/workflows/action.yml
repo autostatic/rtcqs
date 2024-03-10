@@ -43,6 +43,6 @@ jobs:
         with:
           direction: upload
           url: https://codeberg.org
-        token: ${{ secrets.CODEBERG_TOKEN }}
-        release-dir: dist/
+          token: ${{ secrets.CODEBERG_TOKEN }}
+          release-dir: dist/
 
