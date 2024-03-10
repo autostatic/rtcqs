@@ -5,7 +5,7 @@ description: Build and release rtcqs
 on:
   release:
     publish:
-  workflow_dispatch:
+  push:
 
 env:
   WORKDIR: /home/forgejo
