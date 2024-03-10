@@ -11,9 +11,21 @@ env:
 jobs:
   build-rtcqs:
     runs-on: docker
+    container: debian:bookworm
     steps:
       - uses: actions/checkout@v3
-      - run: docker build -t build-rtcqs ../resources/
+      - run: |
+          apt-get update && \
+          DEBIAN_FRONTEND=noninteractive \
+          apt-get install -y --no-install-recommends \
+          tzdata apt-utils build-essential \
+          python3-dev python-is-python3 python3-pip \
+          python3-venv && \
+          apt-get dist-upgrade -y && \
+          apt-get clean && \
+          rm -rf /var/lib/apt/lists/* && \
+          ln -sf /usr/share/zoneinfo/Europe/Amsterdam /etc/localtime && \
+          dpkg-reconfigure -f noninteractive tzdata
 
   release-rtcqs:
     runs-on: docker
