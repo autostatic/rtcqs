@@ -5,7 +5,7 @@ description: Build and release rtcqs
 on: [push]
 
 env:
-  WORKDIR: /home/forgejo
+  WORKDIR: /home/forgejo/rtcqs
   PROJECT_NAME: rtcqs
   
 jobs:
@@ -13,7 +13,7 @@ jobs:
     runs-on: docker
     container:
       image: node:20-bookworm
-      options: "--workdir $WORKDIR"
+      options: "--workdir ${{ env.WORKDIR }}"
     steps:
       - uses: actions/checkout@v3
       - run: |
