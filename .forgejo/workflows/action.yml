@@ -31,4 +31,8 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: rtcqs
-          path: dist/
+          path: dist/rtcqs
+      - uses: actions/upload-artifact@v3
+        with:
+          name: rtcqs_gui
+          path: dist/rtcqs_gui
