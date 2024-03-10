@@ -3,9 +3,9 @@ name: build-rtcqs
 description: Build and release rtcqs
 
 on:
+  push:
   release:
     publish:
-  push:
 
 env:
   WORKDIR: /home/forgejo
