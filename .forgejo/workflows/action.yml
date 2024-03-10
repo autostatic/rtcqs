@@ -36,8 +36,13 @@ jobs:
         with:
           name: rtcqs_gui
           path: dist/rtcqs_gui
-      - uses: actions/forgejo-release@v1
+      - uses: https://code.forgejo.org/forgejo/forgejo-build-publish/build@v3
         with:
-          direction: upload
-          token: ${{ secrets.CODEBERG_TOKEN }}
-          release-dir: dist/
+          forgejo: https://codeberg.org
+          owner: rtcqs
+          repository: rtcqs
+          doer: autostatic
+          token: "${{ secrets.CODEBERG_TOKEN }}"
+          binary-name: rtcqs
+          binary-path: dist
+          verbose: true
