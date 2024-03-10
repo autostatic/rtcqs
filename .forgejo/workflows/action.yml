@@ -28,3 +28,7 @@ jobs:
           venv/bin/pip install --upgrade pysimplegui==4.60.5 pyinstaller && \
           venv/bin/pyinstaller --onefile src/rtcqs/rtcqs.py && \
           venv/bin/pyinstaller --onefile --windowed src/rtcqs/rtcqs_gui.py
+       - uses: actions/upload-artifact@v4
+         with:
+           name: rtcqs
+           path: dist/
