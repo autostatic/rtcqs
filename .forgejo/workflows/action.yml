@@ -25,6 +25,12 @@ jobs:
           rm -rf /var/lib/apt/lists/* && \
           ln -sf /usr/share/zoneinfo/Europe/Amsterdam /etc/localtime && \
           dpkg-reconfigure -f noninteractive tzdata
+      - run: |
+          python3 -m venv venv && \
+          venv/bin/pip install --upgrade pyinstaller && \
+          venv/bin/pyinstaller --onefile src/rtcqs/rtcqs.py && \
+          venv/bin/pyinstaller --onefile --windowed src/rtcqs/rtcqs_gui.py
+        
 
   release-rtcqs:
     runs-on: docker
