@@ -40,3 +40,4 @@ jobs:
         with:
 	  direction: upload
           release-dir: dist/
+          token: ${{ secrets.CODEBERG_TOKEN }}
