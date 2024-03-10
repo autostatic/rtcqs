@@ -13,7 +13,7 @@ jobs:
     runs-on: docker
     container:
       image: node:20-bookworm
-      options: --name build-rtcqs
+      options: --name rtcqs/build
     steps:
       - uses: actions/checkout@v3
       - run: |
@@ -38,7 +38,7 @@ jobs:
   release-rtcqs:
     runs-on: docker
     container:
-      image: build-rtcqs
+      image: rtcqs/build
     steps:
       - uses: actions/checkout@v3
       - uses: actions/forgejo-release@v1
