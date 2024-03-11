@@ -42,3 +42,5 @@ jobs:
           token: ${{ secrets.CODEBERG_TOKEN }}
           release-dir: dist/
           verbose: true
+          tag: v0.6.2
+          override: true
