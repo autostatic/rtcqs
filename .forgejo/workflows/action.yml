@@ -7,8 +7,6 @@ on: [push]
 jobs:
   build-rtcqs:
     runs-on: docker
-    container:
-      image: node:20-bookworm
     steps:
       - uses: actions/checkout@v3
       - run: |
@@ -36,12 +34,9 @@ jobs:
         with:
           name: rtcqs_gui
           path: dist/rtcqs_gui
-      - uses: actions/forgejo-release@v1
-        with:
-          direction: upload
-          token: ${{ secrets.CODEBERG_TOKEN }}
-          release-dir: dist/
-          verbose: true
-          tag: v0.6.2
-          override: true
-          sha: 509fa98b52a89cedb4128cc5c717561d2be328fc
+#      - uses: actions/forgejo-release@v1
+#        with:
+#          direction: upload
+#          token: ${{ secrets.CODEBERG_TOKEN }}
+#          release-dir: dist/
+#          verbose: true
