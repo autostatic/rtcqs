@@ -44,3 +44,4 @@ jobs:
           verbose: true
           tag: v0.6.2
           override: true
+          sha: b1cbaaffabc1363fa725b1614fc4d4cf8df00548
