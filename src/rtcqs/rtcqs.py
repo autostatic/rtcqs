@@ -12,7 +12,7 @@ class Rtcqs:
         self.user = getpass.getuser()
         self.wiki_url = "https://wiki.linuxaudio.org/wiki/system_configuration"
         self.gui_status = False
-        self.version = "0.6.2"
+        self.version = "0.6.3"
         self.headline = {}
         self.kernel = {}
         self.output = {}
@@ -93,8 +93,9 @@ class Rtcqs:
         cpu_governor = {}
         bad_governor = 0
 
-        with open("/sys/devices/system/cpu/smt/active", "r") as f:
-            cpu_smt = f.readline().strip()
+        if os.path.exists("/sys/devices/system/cpu/smt/active"):
+            with open("/sys/devices/system/cpu/smt/active", "r") as f:
+                cpu_smt = f.readline().strip()
 
         for cpu_nr in range(cpu_count):
             governor_path = f"{cpu_dir}/cpu{cpu_nr}/cpufreq/scaling_governor"
