@@ -12,7 +12,7 @@ class Rtcqs:
         self.user = getpass.getuser()
         self.wiki_url = "https://wiki.linuxaudio.org/wiki/system_configuration"
         self.gui_status = False
-        self.version = "0.6.3"
+        self.version = "0.6.4"
         self.headline = {}
         self.kernel = {}
         self.output = {}
@@ -95,7 +95,7 @@ class Rtcqs:
 
         if os.path.exists("/sys/devices/system/cpu/smt/active"):
             with open("/sys/devices/system/cpu/smt/active", "r") as f:
-                cpu_smt = f.readline().strip()
+                self.cpu_smt = f.readline().strip()
 
         for cpu_nr in range(cpu_count):
             governor_path = f"{cpu_dir}/cpu{cpu_nr}/cpufreq/scaling_governor"
@@ -105,7 +105,7 @@ class Rtcqs:
                     cpu_governor[cpu_nr] = f.readline().strip()
                     cpu_list.append(f"CPU {cpu_nr}: {cpu_governor[cpu_nr]}")
             except OSError as e:
-                if e.errno == 16 and not cpu_smt:
+                if e.errno == 16 and not self.cpu_smt:
                     pass
 
         for value in cpu_governor.values():
@@ -123,6 +123,26 @@ class Rtcqs:
             self.status[check] = True
             self.output[check] = "The scaling governor of all CPUs is set " \
                 "to performance."
+
+        self.format_output(check)
+
+    def smt_check(self):
+        check = "smt"
+        self.headline[check] = "Simultaneous Multithreading"
+        wiki_anchor = "#simultaneous_multithreading"
+
+        if not self.cpu_smt:
+            self.status[check] = False
+            self.output[check] = "Simultaneous Multithreading (SMT, also " \
+                "called hyper-threading) is enabled. This can cause spikes " \
+                "in DSP load at higher DSP loads. Consider disabling SMT " \
+                "when experiencing such spikes with 'echo off | sudo tee " \
+                "/sys/devices/system/cpu/smt/control'. See also" \
+                f"{self.wiki_url}{wiki_anchor}"
+        else:
+            self.status[check] = True
+            self.output[check] = "Simultaneaous Multithreading (SMT, also " \
+                "called hyper-threading) is disabled."
 
         self.format_output(check)
 
@@ -437,6 +457,7 @@ class Rtcqs:
         self.root_check()
         self.audio_group_check()
         self.governor_check()
+        self.smt_check()
         self.kernel_config_check()
         self.high_res_timers_check()
         self.tickless_check()
